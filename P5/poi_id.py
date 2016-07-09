@@ -30,6 +30,8 @@ enron_df = pd.DataFrame.from_dict(data_dict, orient="index")
 
 # Drop outliers
 enron_df.drop('TOTAL', inplace=True)
+enron_df.drop("THE TRAVEL AGENCY IN THE PARK", inplace=True)
+enron_df.drop("LOCKHART EUGENE E", inplace=True)
 
 # Drop email_address column
 enron_df.drop('email_address', axis=1, inplace=True)
@@ -61,9 +63,7 @@ kbest.get_support()
 features = sorted(zip(enron_df_features.columns, kbest.scores_, kbest.get_support()), key=lambda x: x[1])
 my_list = [x[0] for x in features if x[2] == True]
 my_list = ['poi'] + my_list
-my_list
 
 my_dataset = enron_df[my_list].transpose().to_dict()
 
-clf = GaussianNB()
-dump_classifier_and_data(clf, my_dataset, my_list)
+dump_classifier_and_data(clf.best_estimator_.steps[1][1], my_dataset, my_list)
