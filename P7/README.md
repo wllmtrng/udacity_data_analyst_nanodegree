@@ -51,11 +51,11 @@ Baseline Values:
 
 Standard Deviation for Evaluation Metric:
 
-|  Metrics | Baseline Values   | SE | SE/5000
+|  Metrics | Baseline Values   | SE | SE/5000 |
 |---|--:|--|--|
-| Gross Conversion  | 0.2063  | 0.0072 | 0.0202
-| Retention         | 0.5300  | 0.0194 | 0.0549
-| Net Conversion    | 0.1093  | 0.0055 | 0.0156
+| Gross Conversion  | 0.2063  | 0.0072 | 0.0202 |
+| Retention         | 0.5300  | 0.0194 | 0.0549 |
+| Net Conversion    | 0.1093  | 0.0055 | 0.0156 |
 
 For Gross and Net Conversion, the analytical estimates would be comparable to the empircal variablility due to the fact that the denominator used to calculate those values were using the the unit of diversion, which was the cookie.
 
@@ -76,7 +76,7 @@ pageviews = 2 * samples_needed / 0.08
 print("Gross Conversion Pageviews Required: {}".format(pageviews))
 ```
 
-    Gross Conversion Pageviews Required 645975.0
+    Gross Conversion Pageviews Required: 645975.0
 
 
 
