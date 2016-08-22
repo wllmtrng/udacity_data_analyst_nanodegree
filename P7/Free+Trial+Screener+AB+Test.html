@@ -11805,13 +11805,13 @@ div#notebook {
 <li><strong>Number of clicks</strong>: Number of unique cookies to click the "Start free trial" button. </li>
 </ul>
 <h3 id="Explanation">Explanation<a class="anchor-link" href="#Explanation">&#182;</a></h3><ul>
-<li><strong>Number of cookies</strong>: This was chosen because as an invariant metric because it is the unit of diversion.</li>
-<li><strong>Click Through Probability</strong>: CTP is a better option as an invariant metric than number of clicks because it accurately tracks how many independent users move on to the next page. Since the experiment occurs after the "Start free trial" button is clicked, the CTP should not vary.</li>
-<li><strong>Gross conversion</strong>: A statistically significant change in the experiment will tell us how the experiment affected a user in enrolling in the free trial. We are hoping to see a decrease in gross conversion since the experiment will dissuade visitors who are not ready for the program.</li>
-<li><strong>Retention</strong>: A nonnegative stastically significant change here will show some evidence suggesting that overall user experience was improved by informing users of the required time commitment.</li>
-<li><strong>Net conversion</strong>: A nonnegative stastically significant change here will show some evidence suggesting that overall user experience was improved by informing users of the required time commitment.</li>
-<li><strong>Number of user-ids</strong>: With this metric alone, we are unable to tell if the experiment had a positive or negative effect with a statistically significant change between experiment and control.</li>
-<li><strong>Number of clicks</strong>: There might be a slim chance that this metric may be unreliable if there were usability issues during the time when the experiment was launched or in the control.</li>
+<li><strong>Number of cookies</strong>: This was chosen because as an invariant metric because it is the unit of diversion, and the number should not vary between control and experimental groups since the experiment occurs after this metric is recorded.</li>
+<li><strong>Click Through Probability</strong>: CTP is a better option as an invariant metric than number of clicks because it accurately tracks how many independent users move on to the next page. Also, since the intervention occurs after the "Start free trial" button is clicked, the CTP would not be affected by the experiment.</li>
+<li><strong>Gross conversion</strong>: A statistically significant change in the experiment will tell us how the experiment affected a user in enrolling in the free trial. Since we are expecting a decrease in user ids in the experiment, we are hoping to see a decrease in gross conversion since the experiment will dissuade visitors who are not ready for the program.</li>
+<li><strong>Retention</strong>: The experiment would filter out visitors that would not have time to progress during the 14 day trial. As a result, the resulting proportion of user-ids to continue past the trial period should have a a nonnegative stastically significant change here.</li>
+<li><strong>Net conversion</strong>: Since we assume the intervention would not discourage the visitors that would continue past the 14 day trial period, we expect this metric to have nonnegative practical significiance. For this reason, it makes an excellent choice as an evaluation metric.</li>
+<li><strong>Number of user-ids</strong>: This may be actually used an evaluation metric, but it would not be a good one. With this metric alone, we are unable to tell if the experiment had a positive or negative effect with a statistically significant change between experiment and control since we are not able to normalize between the two groups. </li>
+<li><strong>Number of clicks</strong>: This metric can be used as an invariant metric because it occurs prior to the intervention, but it is generally used if there was an UI change. The CTP is a much better choice as an invariant metric than this one. There also might be a slim chance that this metric may be unreliable if there were usability issues during the time when the experiment was launched or in the control.</li>
 </ul>
 <h3 id="Expected-Results">Expected Results<a class="anchor-link" href="#Expected-Results">&#182;</a></h3><p>If the experiment is successful, I expect the users who don't have the time commitment will not complete checkout and enroll into the trial. As an effect, the number of user-ids should statistically decrease, and of those users who wish to enroll into the trial, a higher percentage of them should convert into paying users. The expectation of the evaluation metrics based on my conjecture are as follows:</p>
 <ul>
@@ -12363,7 +12363,7 @@ d: -0.00487372267454
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As stated before Bonferroni correction was not used in this phase because Gross Conversion and Net Conversion are highly correlated with each other. Using Bonferroni correction would too conservative to use, requiring too many pageviews required for the experiment.</p>
-<p>We are also choosing not to use Bonferroni correction because we are requiring both Net Conversion and Gross Conversion to show statistical and practical significance. Bonferroni correction would be useful in a case where only one of many evaluation metrics were required to show practical significance.</p>
+<p>We are also choosing not to use Bonferroni correction because we are requiring both Net Conversion and Gross Conversion to show statistical and practical significance. Bonferroni correction would be useful in a case where any metric showing statistical significance is enough to trigger the launch of an experiment.</p>
 
 </div>
 </div>
