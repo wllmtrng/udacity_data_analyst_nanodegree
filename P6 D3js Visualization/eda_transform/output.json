@@ -1,0 +1,552 @@
+[
+  {
+    "ProsperScore": 1,
+    "Occupation": "Accountant/CPA",
+    "count": 36
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Administrative Assistant",
+    "count": 46
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Analyst",
+    "count": 21
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Clerical",
+    "count": 25
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Computer Programmer",
+    "count": 37
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Executive",
+    "count": 33
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Nurse (RN)",
+    "count": 16
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Sales - Commission",
+    "count": 20
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Skilled Labor",
+    "count": 15
+  },
+  {
+    "ProsperScore": 1,
+    "Occupation": "Teacher",
+    "count": 31
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Accountant/CPA",
+    "count": 154
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Administrative Assistant",
+    "count": 201
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Analyst",
+    "count": 136
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Clerical",
+    "count": 187
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Computer Programmer",
+    "count": 133
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Executive",
+    "count": 158
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Nurse (RN)",
+    "count": 103
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Sales - Commission",
+    "count": 157
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Skilled Labor",
+    "count": 148
+  },
+  {
+    "ProsperScore": 2,
+    "Occupation": "Teacher",
+    "count": 189
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Accountant/CPA",
+    "count": 214
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Administrative Assistant",
+    "count": 261
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Analyst",
+    "count": 182
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Clerical",
+    "count": 266
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Computer Programmer",
+    "count": 186
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Executive",
+    "count": 233
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Nurse (RN)",
+    "count": 168
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Sales - Commission",
+    "count": 210
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Skilled Labor",
+    "count": 206
+  },
+  {
+    "ProsperScore": 3,
+    "Occupation": "Teacher",
+    "count": 268
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Accountant/CPA",
+    "count": 304
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Administrative Assistant",
+    "count": 445
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Analyst",
+    "count": 331
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Clerical",
+    "count": 361
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Computer Programmer",
+    "count": 284
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Executive",
+    "count": 393
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Nurse (RN)",
+    "count": 328
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Sales - Commission",
+    "count": 358
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Skilled Labor",
+    "count": 353
+  },
+  {
+    "ProsperScore": 4,
+    "Occupation": "Teacher",
+    "count": 403
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Accountant/CPA",
+    "count": 280
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Administrative Assistant",
+    "count": 377
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Analyst",
+    "count": 286
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Clerical",
+    "count": 273
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Computer Programmer",
+    "count": 278
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Executive",
+    "count": 333
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Nurse (RN)",
+    "count": 234
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Sales - Commission",
+    "count": 248
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Skilled Labor",
+    "count": 262
+  },
+  {
+    "ProsperScore": 5,
+    "Occupation": "Teacher",
+    "count": 362
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Accountant/CPA",
+    "count": 385
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Administrative Assistant",
+    "count": 438
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Analyst",
+    "count": 333
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Clerical",
+    "count": 329
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Computer Programmer",
+    "count": 385
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Executive",
+    "count": 419
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Nurse (RN)",
+    "count": 324
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Sales - Commission",
+    "count": 304
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Skilled Labor",
+    "count": 354
+  },
+  {
+    "ProsperScore": 6,
+    "Occupation": "Teacher",
+    "count": 469
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Accountant/CPA",
+    "count": 295
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Administrative Assistant",
+    "count": 331
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Analyst",
+    "count": 315
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Clerical",
+    "count": 267
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Computer Programmer",
+    "count": 381
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Executive",
+    "count": 439
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Nurse (RN)",
+    "count": 291
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Sales - Commission",
+    "count": 289
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Skilled Labor",
+    "count": 261
+  },
+  {
+    "ProsperScore": 7,
+    "Occupation": "Teacher",
+    "count": 347
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Accountant/CPA",
+    "count": 403
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Administrative Assistant",
+    "count": 342
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Analyst",
+    "count": 481
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Clerical",
+    "count": 218
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Computer Programmer",
+    "count": 582
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Executive",
+    "count": 575
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Nurse (RN)",
+    "count": 330
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Sales - Commission",
+    "count": 356
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Skilled Labor",
+    "count": 304
+  },
+  {
+    "ProsperScore": 8,
+    "Occupation": "Teacher",
+    "count": 419
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Accountant/CPA",
+    "count": 256
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Administrative Assistant",
+    "count": 158
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Analyst",
+    "count": 297
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Clerical",
+    "count": 111
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Computer Programmer",
+    "count": 439
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Executive",
+    "count": 387
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Nurse (RN)",
+    "count": 190
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Sales - Commission",
+    "count": 195
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Skilled Labor",
+    "count": 156
+  },
+  {
+    "ProsperScore": 9,
+    "Occupation": "Teacher",
+    "count": 222
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Accountant/CPA",
+    "count": 171
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Administrative Assistant",
+    "count": 77
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Analyst",
+    "count": 256
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Clerical",
+    "count": 42
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Computer Programmer",
+    "count": 383
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Executive",
+    "count": 337
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Nurse (RN)",
+    "count": 116
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Sales - Commission",
+    "count": 133
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Skilled Labor",
+    "count": 79
+  },
+  {
+    "ProsperScore": 10,
+    "Occupation": "Teacher",
+    "count": 106
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Accountant/CPA",
+    "count": 52
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Administrative Assistant",
+    "count": 21
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Analyst",
+    "count": 73
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Clerical",
+    "count": 8
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Computer Programmer",
+    "count": 112
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Executive",
+    "count": 130
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Nurse (RN)",
+    "count": 45
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Sales - Commission",
+    "count": 48
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Skilled Labor",
+    "count": 19
+  },
+  {
+    "ProsperScore": 11,
+    "Occupation": "Teacher",
+    "count": 42
+  }
+]

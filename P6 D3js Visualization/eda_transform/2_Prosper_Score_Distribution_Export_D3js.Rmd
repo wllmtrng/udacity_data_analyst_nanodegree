@@ -1,0 +1,56 @@
+---
+title: "2_Prosper_Score_Distribution_Export_D3js.Rmd"
+author: "William Truong"
+date: "August 24, 2016"
+output:
+  html_document: 
+    keep_md: yes
+---
+
+
+```{r}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='figs/',
+                      echo=TRUE, warning=FALSE, message=FALSE, fig.retina = 2)
+library(data.table)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(gridExtra)
+library(jsonlite)
+
+load("./prosper_df.Rda")
+df <- prosper_df
+```
+
+Find out what the top 10 professions in terms of amount are
+```{r}
+df.Occupation <- df %>% 
+               group_by(Occupation) %>%
+               summarise(count = n()) %>%
+               ungroup() %>%
+               arrange(desc(count))
+
+df.Occupation
+```
+
+```{r}
+omit <- df.Occupation$Occupation != "Other" & df.Occupation$Occupation != "Professional" & df.Occupation$Occupation != "Unspecified"
+
+occupations <- head(df.Occupation[omit,],10)$Occupation
+```
+
+
+```{r}
+df.ProsperScore_Occupation <- df %>% 
+                           group_by(ProsperScore, Occupation) %>%
+                           summarise(count = n()) %>%
+                           ungroup()
+
+mask <- df.ProsperScore_Occupation$Occupation %in% occupations
+
+jsonFile = toJSON(df.ProsperScore_Occupation[mask,], pretty=TRUE, auto_unbox=TRUE)
+fileConn<-file("output.json")
+writeLines(jsonFile, fileConn)
+close(fileConn)
+```

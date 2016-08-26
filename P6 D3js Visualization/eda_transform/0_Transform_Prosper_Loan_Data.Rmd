@@ -1,0 +1,94 @@
+---
+title: "0_Transform_Prosper_Loan_Data"
+output: 
+  html_document: 
+    keep_md: yes
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='figs/',
+                      echo=TRUE, warning=FALSE, message=FALSE)
+library(data.table)
+library(lubridate)
+```
+# Loan Data From Prosper
+This data set contains 113,937 loans with 81 variables on each loan, including loan amount, borrower rate (or interest rate), current loan status, borrower income, and many others. Refer to the Resources and References section for the dataset.
+
+Before running this Rmd file, download [prosperLoanData.csv](https://www.google.com/url?q=https://s3.amazonaws.com/udacity-hosted-downloads/ud651/prosperLoanData.csv&sa=D&ust=1472233880775000&usg=AFQjCNEtEszWeoeAr-uKZrDAjVcJLmZ0qw).
+```{r}
+prosper_df = read.csv("./prosperLoanData.csv", stringsAsFactors=FALSE)
+summary(prosper_df)
+```
+
+```{r}
+str(prosper_df)
+```
+
+```{r}
+head(prosper_df, 10)
+```
+## Convert dates to datetime format
+
+```{r}
+date_variables<-c("ListingCreationDate","ClosedDate",    "DateCreditPulled","FirstRecordedCreditLine","LoanOriginationDate")
+
+prosper_df[,date_variables] <-lapply(prosper_df[,date_variables], ymd_hms)
+```
+
+## Check For Duplicates and Remove
+```{r}
+# Remove duplicates since they represent a small proportion
+duplicates <-prosper_df$ListingNumber[duplicated(prosper_df$ListingNumber)]
+prosper_df <- prosper_df[!duplicated(prosper_df$ListingNumber),]
+```
+
+## Investigating Why Some Entries Don't Have a Prosper Score or Rating
+```{r}
+sum(prosper_df$ProsperRating..Alpha. != "")
+sum(!is.na(prosper_df$ProsperScore))
+```
+
+The reason for the missing prosper rating and scores is because Prosper rates operated on a variable rate model decided by the lenders and borrowers like Ebay. There was a relaunch in 2009 and Prosper switched to preset rates determined by borrower criteria.
+
+From Wikipedia:
+
+*Prosper has provided an increasing amount of information about prospective borrowers over time, while also making various changes to its credit policy. Prior to its 2008 'quiet period' and 2009 SEC registration, the company provided "Credit Grades" and other credit information about its prospective lenders. Following the SEC registration, the company created a new model that determined "Prosper Ratings" instead. Additionally, new prospective borrowers were required to have an FICO 8 credit score of at least 640, while returning borrowers only need a score of 600 to request a loan.*
+
+### Remove Entries Without Prosper Scores
+```{r}
+prosper_df <- prosper_df[!is.na(prosper_df$ProsperScore),]
+```
+
+## Convert Columns into Categories
+```{r}
+setDT(prosper_df)
+prosper_df[, ProsperRating..Alpha.:=factor(ProsperRating..Alpha.,
+                                           levels=c('HR', 'E', 'D', 'C', 'B', 'A', 'AA'))]
+prosper_df[, ProsperScore.factored:=factor(ProsperScore)]
+```
+
+## Convert Occupation Related Columns into Categories
+```{r}
+unique(prosper_df$Occupation)
+# Change "" to unspecified
+prosper_df[Occupation=="", Occupation:="Unspecified"]
+prosper_df[, Occupation.factored:=factor(Occupation)]
+prosper_df[, EmploymentStatus:=factor(EmploymentStatus)]
+levels(prosper_df$Occupation.factored)
+```
+
+
+## Create Month Variable for Aggregations
+```{r}
+prosper_df[, ListingCreationMonth:=cut(prosper_df$ListingCreationDate, breaks="month")]
+```
+
+
+## Save
+```{r}
+save(prosper_df, file="prosper_df.Rda")
+```
+
+## Resources and References
+- [Prosper Loan Data](https://www.google.com/url?q=https://s3.amazonaws.com/udacity-hosted-downloads/ud651/prosperLoanData.csv&sa=D&ust=1470535594989000&usg=AFQjCNFnP-1MaAOimLzkxa8Wjq5TC7Ez-Q)
+- [Prosper Loan Data Dictionary](https://www.google.com/url?q=https://docs.google.com/spreadsheet/ccc?key%3D0AllIqIyvWZdadDd5NTlqZ1pBMHlsUjdrOTZHaVBuSlE%26usp%3Dsharing&sa=D&ust=1470535594992000&usg=AFQjCNE55Bq3n5BUUUUn6t_0QAQ7GxqkSA)
+- [2009 Post Relaunch - Wikipedia](https://en.wikipedia.org/wiki/Prosper_Marketplace#2009_post_SEC_relaunch)
