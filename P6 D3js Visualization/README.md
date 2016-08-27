@@ -1,17 +1,18 @@
 
 View at [http://bl.ocks.org/wllmtrng/ff72bf455078448e5e40ece3bff15354](http://bl.ocks.org/wllmtrng/ff72bf455078448e5e40ece3bff15354)
 
+
 ## Summary
 
 When an investor decides to invest in a loan through Prosper, one of the things that can be screened is occupation. Occupations with individuals that have more higher prosper scores on average may be a safer investment, and with that said, occupations with lower prosper scores on average may have more reward associated with it.
 
-With that said, here at the top ten occupations and their Prosper Score distribution from the Prosper Loan Dataset.
+With that said, here are the top ten occupations and their Prosper Score distribution from the Prosper Loan Dataset.
 
 ## Design 
 As I was performing the initial exploratory data analysis on the Prosper Loan Dataset, I decided I wanted to do a bit
 more exploration on background of people who seek to find loans. My initial thoughts were that people who weren't
-credible were more likely to use something like Prosper Loans. I also wondered if there are occupations who are, as
-a group, more credible than others.
+credit worthy were more likely to use something like Prosper Loans. I also wondered if there are occupations who are, as
+a group, more credit worthy than others.
 
 I chose to use this [dashboard](http://bl.ocks.org/NPashaP/96447623ef4d342ee09b) type of visualization because:
 
@@ -35,7 +36,7 @@ percentage wise for that score.
 What I don't like is that there are two Occupation types that the data is skewed towards. Other and Professional
 Occupations don't give much value. Although they are indeed the top 10 Occupation, I believe they should be removed.
 
-It's interesting to see that Computer Programmers are very credible occupations. They have a high prosper score on
+It's interesting to see that Computer Programmers are very credit worthy occupations. They have a high prosper score on
 average compared to all the other professions, besides Executive.
 
 ### t0mkaka
@@ -67,7 +68,7 @@ visualization
 
 ### Dai Ying Wu
 The title could be changed to reflect a more targetted story you're trying to get across. I'm assuming you want to show
-people what professions are most credible. One thing you can do to demonstrate that more properly is to maybe sort the legend when a Prosper Score is highlighted.
+people what professions are most credit worthy. One thing you can do to demonstrate that more properly is to maybe sort the legend when a Prosper Score is highlighted.
 
 The things I do notice is that the distribution amongs occupations is pretty even in the midrange prosper scores. In the
 higher end executives, nurses, and programmers dominate. On the lower end, Teachers, Administrative Assistants, Executives, 
