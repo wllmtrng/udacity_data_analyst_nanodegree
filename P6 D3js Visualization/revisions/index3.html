@@ -91,7 +91,7 @@
                     .attr("text-anchor", "middle")
                     .style("font-size", "16px")
                     .style("text-decoration", "underline")
-                    .text("Which Occupations Dominate Each Prosper Score?");
+                    .text("Prosper Score Distribution for 10 Common Occupations");
 
             // Create function for y-axis map.
             var y = d3.scale.linear().range([hGDim.h, 50])
@@ -279,169 +279,169 @@
 </script>
 
 <script>
-    freqData =[
+    freqData = [
         {
             "freq": {
-                "Accountant/CPA": 36,
-                "Administrative Assistant": 46,
-                "Analyst": 21,
                 "Clerical": 25,
                 "Computer Programmer": 37,
-                "Executive": 33,
                 "Nurse (RN)": 16,
+                "Executive": 33,
                 "Sales - Commission": 20,
+                "Teacher": 31,
+                "Administrative Assistant": 46,
+                "Accountant/CPA": 36,
                 "Skilled Labor": 15,
-                "Teacher": 31
+                "Analyst": 21
             },
             "ProsperScore": "1"
         },
         {
             "freq": {
-                "Accountant/CPA": 154,
-                "Administrative Assistant": 201,
-                "Analyst": 136,
                 "Clerical": 187,
                 "Computer Programmer": 133,
-                "Executive": 158,
                 "Nurse (RN)": 103,
+                "Executive": 158,
                 "Sales - Commission": 157,
+                "Teacher": 189,
+                "Administrative Assistant": 201,
+                "Accountant/CPA": 154,
                 "Skilled Labor": 148,
-                "Teacher": 189
+                "Analyst": 136
             },
             "ProsperScore": "2"
         },
         {
             "freq": {
-                "Accountant/CPA": 214,
-                "Administrative Assistant": 261,
-                "Analyst": 182,
                 "Clerical": 266,
                 "Computer Programmer": 186,
-                "Executive": 233,
                 "Nurse (RN)": 168,
+                "Executive": 233,
                 "Sales - Commission": 210,
+                "Teacher": 268,
+                "Administrative Assistant": 261,
+                "Accountant/CPA": 214,
                 "Skilled Labor": 206,
-                "Teacher": 268
+                "Analyst": 182
             },
             "ProsperScore": "3"
         },
         {
             "freq": {
-                "Accountant/CPA": 304,
-                "Administrative Assistant": 445,
-                "Analyst": 331,
                 "Clerical": 361,
                 "Computer Programmer": 284,
-                "Executive": 393,
                 "Nurse (RN)": 328,
+                "Executive": 393,
                 "Sales - Commission": 358,
+                "Teacher": 403,
+                "Administrative Assistant": 445,
+                "Accountant/CPA": 304,
                 "Skilled Labor": 353,
-                "Teacher": 403
+                "Analyst": 331
             },
             "ProsperScore": "4"
         },
         {
             "freq": {
-                "Accountant/CPA": 280,
-                "Administrative Assistant": 377,
-                "Analyst": 286,
                 "Clerical": 273,
                 "Computer Programmer": 278,
-                "Executive": 333,
                 "Nurse (RN)": 234,
+                "Executive": 333,
                 "Sales - Commission": 248,
+                "Teacher": 362,
+                "Administrative Assistant": 377,
+                "Accountant/CPA": 280,
                 "Skilled Labor": 262,
-                "Teacher": 362
+                "Analyst": 286
             },
             "ProsperScore": "5"
         },
         {
             "freq": {
-                "Accountant/CPA": 385,
-                "Administrative Assistant": 438,
-                "Analyst": 333,
                 "Clerical": 329,
                 "Computer Programmer": 385,
-                "Executive": 419,
                 "Nurse (RN)": 324,
+                "Executive": 419,
                 "Sales - Commission": 304,
+                "Teacher": 469,
+                "Administrative Assistant": 438,
+                "Accountant/CPA": 385,
                 "Skilled Labor": 354,
-                "Teacher": 469
+                "Analyst": 333
             },
             "ProsperScore": "6"
         },
         {
             "freq": {
-                "Accountant/CPA": 295,
-                "Administrative Assistant": 331,
-                "Analyst": 315,
                 "Clerical": 267,
                 "Computer Programmer": 381,
-                "Executive": 439,
                 "Nurse (RN)": 291,
+                "Executive": 439,
                 "Sales - Commission": 289,
+                "Teacher": 347,
+                "Administrative Assistant": 331,
+                "Accountant/CPA": 295,
                 "Skilled Labor": 261,
-                "Teacher": 347
+                "Analyst": 315
             },
             "ProsperScore": "7"
         },
         {
             "freq": {
-                "Accountant/CPA": 403,
-                "Administrative Assistant": 342,
-                "Analyst": 481,
                 "Clerical": 218,
                 "Computer Programmer": 582,
-                "Executive": 575,
                 "Nurse (RN)": 330,
+                "Executive": 575,
                 "Sales - Commission": 356,
+                "Teacher": 419,
+                "Administrative Assistant": 342,
+                "Accountant/CPA": 403,
                 "Skilled Labor": 304,
-                "Teacher": 419
+                "Analyst": 481
             },
             "ProsperScore": "8"
         },
         {
             "freq": {
-                "Accountant/CPA": 256,
-                "Administrative Assistant": 158,
-                "Analyst": 297,
                 "Clerical": 111,
                 "Computer Programmer": 439,
-                "Executive": 387,
                 "Nurse (RN)": 190,
+                "Executive": 387,
                 "Sales - Commission": 195,
+                "Teacher": 222,
+                "Administrative Assistant": 158,
+                "Accountant/CPA": 256,
                 "Skilled Labor": 156,
-                "Teacher": 222
+                "Analyst": 297
             },
             "ProsperScore": "9"
         },
         {
             "freq": {
-                "Accountant/CPA": 171,
-                "Administrative Assistant": 77,
-                "Analyst": 256,
                 "Clerical": 42,
                 "Computer Programmer": 383,
-                "Executive": 337,
                 "Nurse (RN)": 116,
+                "Executive": 337,
                 "Sales - Commission": 133,
+                "Teacher": 106,
+                "Administrative Assistant": 77,
+                "Accountant/CPA": 171,
                 "Skilled Labor": 79,
-                "Teacher": 106
+                "Analyst": 256
             },
             "ProsperScore": "10"
         },
         {
             "freq": {
-                "Accountant/CPA": 52,
-                "Administrative Assistant": 21,
-                "Analyst": 73,
                 "Clerical": 8,
                 "Computer Programmer": 112,
-                "Executive": 130,
                 "Nurse (RN)": 45,
+                "Executive": 130,
                 "Sales - Commission": 48,
+                "Teacher": 42,
+                "Administrative Assistant": 21,
+                "Accountant/CPA": 52,
                 "Skilled Labor": 19,
-                "Teacher": 42
+                "Analyst": 73
             },
             "ProsperScore": "11"
         }
