@@ -1,13 +1,4 @@
 
-View at [http://bl.ocks.org/wllmtrng/ff72bf455078448e5e40ece3bff15354](http://bl.ocks.org/wllmtrng/ff72bf455078448e5e40ece3bff15354)
-
-
-## Summary
-
-When an investor decides to invest in a loan through Prosper, one of the things that can be screened is occupation. Occupations with individuals that have more higher prosper scores on average may be a safer investment, and with that said, occupations with lower prosper scores on average may have more reward associated with it.
-
-With that said, here are the top ten occupations and their Prosper Score distribution from the Prosper Loan Dataset.
-
 ## Design 
 As I was performing the initial exploratory data analysis on the Prosper Loan Dataset, I decided I wanted to do a bit
 more exploration on background of people who seek to find loans. My initial thoughts were that people who weren't
@@ -24,6 +15,10 @@ I chose to use this [dashboard](http://bl.ocks.org/NPashaP/96447623ef4d342ee09b)
 There are a total of 68 occupations recorded in the Prosper Loan Dataset. I took the top ten occupations by count for
 my visualization. Originally amongst the top ten, there were occupations that weren't clear, so I omitted them and
 replaced them with the next occupation.
+
+After some feedback from my submission and reading an [article](http://www.businessinsider.com/pie-charts-are-the-worst-2013-6) which 
+discourages the use of pie charts, I sought to change the visualization to remove the pie chart. I came across a [hierarchical bar chart](http://bl.ocks.org/mbostock/1283663)
+example and thought it conveyed my story better.
 
 ## Feedback
 
@@ -84,3 +79,5 @@ and Accountants take much of the proportion. It is ironic that for the Prosper S
 - [D3 Chart Example](http://www.alexrothenberg.com/2014/01/06/learning-d3-by-building-a-chart.js.html)
 - [Estimated Vs. Realized Returns Prosper](https://angel.co/projects/289416-expected-vs-realized-returns-for-prosper-loans?src=user_profile)
 - [D3 Gallery](https://github.com/d3/d3/wiki/gallery)
+- [Hierarchical Bar Chart](http://bl.ocks.org/mbostock/1283663)
+- [Pie Charts Are The Worst](http://www.businessinsider.com/pie-charts-are-the-worst-2013-6)

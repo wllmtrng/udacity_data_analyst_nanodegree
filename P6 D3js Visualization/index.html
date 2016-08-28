@@ -1,451 +1,1319 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-    body{
-        width:1060px;
-        margin:50px auto;
+    body {
+        background-color: #e4e8e7;
+        padding: 10px;
     }
-    path {  stroke: #fff; }
-    path:hover {  opacity:0.9; }
-    rect:hover {  fill:blue; }
-    .axis {  font: 10px sans-serif; }
-    .legend tr{    border-bottom:1px solid grey; }
-    .legend tr:first-child{    border-top:1px solid grey; }
 
-    .axis path,
-    .axis line {
-        fill: none;
-        stroke: #000;
+    h1 {
+        font: 30px Futura;
+        fill: black;
+    }
+
+    p {font: 16px Futura;
+        fill: black;
+
+    }
+
+    li {
+        font: 14px Futura;
+        fill: black;
+    }
+
+
+    text {
+        font: 11px Futura;
+        fill: black;
+        stroke: #grey;
+    }
+
+
+    rect.background {
+        fill: #e4e8e7;
+        stoke: #9D7917;
+    }
+
+    .axis {
         shape-rendering: crispEdges;
     }
 
-    .x.axis path {  display: none; }
-    .legend{
-        margin-bottom:0px;
-        display:inline-block;
-        border-collapse: collapse;
-        border-spacing: 0px;
-    }
-    .legend td{
-        padding:4px 5px;
-        vertical-align:bottom;
-    }
-    .legendFreq, .legendPerc{
-        align:right;
-        width:50px;
+    .axis path,
+    .axis line {
+        fill: #638ea3;
+        stroke: none;
     }
 
 </style>
 <body>
-<div id='dashboard'>
-</div>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<h1>Occupations and their Prosper Score</h1>
+
+<p><a href="https://www.prosper.com/">The Prosper Marketplace</a> provides an
+    alternative avenue for people to invest and borrow money. When a potential
+    borrower fills out an application, a Prosper Score from 1 to 11 is
+    assigned. Lending to an individual of a lower score will have a better
+    return on investment, but also have increased chances of defaulting.
+    Lending to an individual of a higher score will have a lower chance of
+    defaulting, but a lower return on investment.
+</p>
+
+<p>Quite often, investors use historical data and group past borrowers by
+    certain criteria to compare against potential borrowers of similar criteria.
+    One criteria used often is Occupations. Potential borrowers with Occupations
+    that have a higher Prosper Score on average can be generally more credit worthy.
+</p>
+
+<p>Shown below are number of past borrowers grouped by Occupation. Click on the bar
+    of each Occupation to see how Prosper Score is split between the individuals.
+    To return back to the Occupations display, click on the blank portion of the
+    visualization canvas
+</p>
+<script src="//d3js.org/d3.v3.min.js"></script>
 <script>
-    function dashboard(id, fData){
-        var
-            barColor = 'steelblue',
-            keys = Object.keys(fData[6].freq),
-            colors = d3.scale.category20().domain(0, keys.length),
-            keyMapToNum = {};
 
-        for (var i = 0, len = keys.length; i < len; ++i) {
-            keyMapToNum[keys[i]] = i
+    function hierarchical(data) {
+        var margin = {top: 30, right: 120, bottom: 0, left: 120},
+                width = 960 - margin.left - margin.right,
+                height = 600 - margin.top - margin.bottom;
+
+        var x = d3.scale.linear()
+                .range([0, width]);
+
+        var barHeight = 20;
+
+        var color = d3.scale.ordinal()
+                .range(["steelblue", "#ccc"]);
+
+        var duration = 750,
+                delay = 25;
+
+        var partition = d3.layout.partition()
+                .value(function (d) {
+                    return d.size;
+                });
+
+        var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("top");
+
+        var svg = d3.select("body").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("rect")
+                .attr("class", "background")
+                .attr("width", width)
+                .attr("height", height)
+                .on("click", up);
+
+        svg.append("g")
+                .attr("class", "x axis");
+
+        svg.append("g")
+                .attr("class", "y axis")
+                .append("line")
+                .attr("y1", "100%");
+
+
+        partition.nodes(data);
+        x.domain([0, data.value]).nice();
+        down(data, 0);
+
+        function down(d, i) {
+            if (!d.children || this.__transition__) return;
+            var end = duration + d.children.length * delay;
+
+            // Mark any currently-displayed bars as exiting.
+            var exit = svg.selectAll(".enter")
+                    .attr("class", "exit");
+
+            // Entering nodes immediately obscure the clicked-on bar, so hide it.
+            exit.selectAll("rect").filter(function (p) {
+                        return p === d;
+                    })
+                    .style("fill-opacity", 1e-6);
+
+            // Enter the new bars for the clicked-on data.
+            // Per above, entering bars are immediately visible.
+            var enter = bar(d)
+                    .attr("transform", stack(i))
+                    .style("opacity", 1);
+
+            // Have the text fade-in, even though the bars are visible.
+            // Color the bars as parents; they will fade to children if appropriate.
+            enter.select("text").style("fill-opacity", 1e-6);
+            enter.select("rect").style("fill", color(true));
+
+            // Update the x-scale domain.
+            x.domain([0, d3.max(d.children, function (d) {
+                return d.value;
+            })]).nice();
+
+            // Update the x-axis.
+            svg.selectAll(".x.axis").transition()
+                    .duration(duration)
+                    .call(xAxis);
+
+            // Transition entering bars to their new position.
+            var enterTransition = enter.transition()
+                    .duration(duration)
+                    .delay(function (d, i) {
+                        return i * delay;
+                    })
+                    .attr("transform", function (d, i) {
+                        return "translate(0," + barHeight * i * 1.2 + ")";
+                    });
+
+            // Transition entering text.
+            enterTransition.select("text")
+                    .style("fill-opacity", 1);
+
+            // Transition entering rects to the new x-scale.
+            enterTransition.select("rect")
+                    .attr("width", function (d) {
+                        return x(d.value);
+                    })
+                    .style("fill", function (d) {
+                        return color(!!d.children);
+                    });
+
+            // Transition exiting bars to fade out.
+            var exitTransition = exit.transition()
+                    .duration(duration)
+                    .style("opacity", 1e-6)
+                    .remove();
+
+            // Transition exiting bars to the new x-scale.
+            exitTransition.selectAll("rect")
+                    .attr("width", function (d) {
+                        return x(d.value);
+                    });
+
+            // Rebind the current node to the background.
+            svg.select(".background")
+                    .datum(d)
+                    .transition()
+                    .duration(end);
+
+            d.index = i;
         }
-        function segColor(c){ return colors(keyMapToNum[c]) }
 
-        // compute total for each state.
-        fData.forEach(function(d) {
-            var
-                occupations = d["freq"],
-                sum = 0;
-            for (var current in occupations) {
-                sum += occupations[current];
-            }
-            d.total = sum;
-        });
+        function up(d) {
+            if (!d.parent || this.__transition__) return;
+            var end = duration + d.children.length * delay;
 
-        // function to handle histogram.
-        function histoGram(fD){
-            var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-            hGDim.w = 400 - hGDim.l - hGDim.r,
-                    hGDim.h = 350 - hGDim.t - hGDim.b;
+            // Mark any currently-displayed bars as exiting.
+            var exit = svg.selectAll(".enter")
+                    .attr("class", "exit");
 
-            //create svg for histogram.
-            var hGsvg = d3.select(id).append("svg")
-                    .attr("width", hGDim.w + hGDim.l + hGDim.r)
-                    .attr("height", hGDim.h + hGDim.t + hGDim.b + 5).append("g")
-                    .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
+            // Enter the new bars for the clicked-on data's parent.
+            var enter = bar(d.parent)
+                    .attr("transform", function (d, i) {
+                        return "translate(0," + barHeight * i * 1.2 + ")";
+                    })
+                    .style("opacity", 1e-6);
 
-            // create function for x-axis mapping.
-            var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
-                    .domain(fD.map(function(d) { return d[0]; }));
+            // Color the bars as appropriate.
+            // Exiting nodes will obscure the parent bar, so hide it.
+            enter.select("rect")
+                    .style("fill", function (d) {
+                        return color(!!d.children);
+                    })
+                    .filter(function (p) {
+                        return p === d;
+                    })
+                    .style("fill-opacity", 1e-6);
 
-            // Add x-axis to the histogram svg.
-            hGsvg.append("g").attr("class", "x axis")
-                    .attr("transform", "translate(0," + hGDim.h + ")")
-                    .call(d3.svg.axis().scale(x).orient("bottom"));
+            // Update the x-scale domain.
+            x.domain([0, d3.max(d.parent.children, function (d) {
+                return d.value;
+            })]).nice();
 
-           hGsvg.append("text")
-                    .attr("x", hGDim.w/2)
-                    .attr("y", 0)
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "16px")
-                    .style("text-decoration", "underline")
-                    .text("Which Occupations Dominate Each Prosper Score?");
+            // Update the x-axis.
+            svg.selectAll(".x.axis").transition()
+                    .duration(duration)
+                    .call(xAxis);
 
-            // Create function for y-axis map.
-            var y = d3.scale.linear().range([hGDim.h, 50])
-                    .domain([0, d3.max(fD, function(d) { return d[1]; })]);
+            // Transition entering bars to fade in over the full duration.
+            var enterTransition = enter.transition()
+                    .duration(end)
+                    .style("opacity", 1);
 
-            // Create bars for histogram to contain rectangles and freq labels.
-            var bars = hGsvg.selectAll(".bar").data(fD).enter()
-                    .append("g").attr("class", "bar");
+            // Transition entering rects to the new x-scale.
+            // When the entering parent rect is done, make it visible!
+            enterTransition.select("rect")
+                    .attr("width", function (d) {
+                        return x(d.value);
+                    })
+                    .each("end", function (p) {
+                        if (p === d) d3.select(this).style("fill-opacity", null);
+                    });
 
-            //create the rectangles.
-            bars.append("rect")
-                    .attr("x", function(d) { return x(d[0]); })
-                    .attr("y", function(d) { return y(d[1]); })
-                    .attr("width", x.rangeBand())
-                    .attr("height", function(d) { return hGDim.h - y(d[1]); })
-                    .attr('fill',barColor)
-                    .on("mouseover",mouseover)// mouseover is defined below.
-                    .on("mouseout",mouseout);// mouseout is defined below.
+            // Transition exiting bars to the parent's position.
+            var exitTransition = exit.selectAll("g").transition()
+                    .duration(duration)
+                    .delay(function (d, i) {
+                        return i * delay;
+                    })
+                    .attr("transform", stack(d.index));
 
-            //Create the frequency labels above the rectangles.
-            bars.append("text").text(function(d){ return d3.format(",")(d[1])})
-                    .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
-                    .attr("y", function(d) { return y(d[1])-5; })
-                    .attr("text-anchor", "middle");
+            // Transition exiting text to fade out.
+            exitTransition.select("text")
+                    .style("fill-opacity", 1e-6);
 
-            function mouseover(d){  // utility function to be called on mouseover.
-                // filter for selected state.
-                var st = fData.filter(function(s){ return s.ProsperScore == d[0];})[0],
-                        nD = d3.keys(st.freq).map(function(s){ return {type:s, freq:st.freq[s]};});
+            // Transition exiting rects to the new scale and fade to parent color.
+            exitTransition.select("rect")
+                    .attr("width", function (d) {
+                        return x(d.value);
+                    })
+                    .style("fill", color(true));
 
-                // call update functions of pie-chart and legend.
-                pC.update(nD);
-                leg.update(nD);
-            }
+            // Remove exiting nodes when the last child has finished transitioning.
+            exit.transition()
+                    .duration(end)
+                    .remove();
 
-            function mouseout(d){    // utility function to be called on mouseout.
-                // reset the pie-chart and legend.
-                pC.update(tF);
-                leg.update(tF);
-            }
+            // Rebind the current parent to the background.
+            svg.select(".background")
+                    .datum(d.parent)
+                    .transition()
+                    .duration(end);
+        }
 
-            // create function to update the bars. This will be used by pie-chart.
-            hG.update = function(nD, color){
-                // update the domain of the y-axis map to reflect change in frequencies.
-                y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
+        // Creates a set of bars for the given data node, at the specified index.
+        function bar(d) {
+            var bar = svg.insert("g", ".y.axis")
+                    .attr("class", "enter")
+                    .attr("transform", "translate(0,5)")
+                    .selectAll("g")
+                    .data(d.children)
+                    .enter().append("g")
+                    .style("cursor", function (d) {
+                        return !d.children ? null : "pointer";
+                    })
+                    .on("click", down);
 
-                // Attach the new data to the bars.
-                var bars = hGsvg.selectAll(".bar").data(nD);
+            bar.append("text")
+                    .attr("x", -2)
+                    .attr("y", barHeight / 2)
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "end")
+                    .text(function (d) {
+                        return d.name;
+                    });
 
-                // transition the height and color of rectangles.
-                bars.select("rect").transition().duration(500)
-                        .attr("y", function(d) {return y(d[1]); })
-                        .attr("height", function(d) { return hGDim.h - y(d[1]); })
-                        .attr("fill", color);
+            bar.append("rect")
+                    .attr("width", function (d) {
+                        return x(d.value);
+                    })
+                    .attr("height", barHeight);
 
-                // transition the frequency labels location and change value.
-                bars.select("text").transition().duration(500)
-                        .text(function(d){ return d3.format(",")(d[1])})
-                        .attr("y", function(d) {return y(d[1])-5; });
+            return bar;
+        }
+
+        // A stateful closure for stacking bars horizontally.
+        function stack(i) {
+            var x0 = 0;
+            return function (d) {
+                var tx = "translate(" + x0 + "," + barHeight * i * 1.2 + ")";
+                x0 += x(d.value);
+                return tx;
             };
-
-            hGsvg.append("text")
-                    .attr("x", 0)
-                    .attr("y", 290)
-                    .attr("text-anchor", "start")
-                    .attr("font-weight", "bold")
-                    .style("font-size", "16px")
-                    .text("Prosper Score");
-            return hG;
         }
-
-        // function to handle pieChart.
-        function pieChart(pD){
-            var pC ={},    pieDim ={w:250, h: 250};
-            pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
-
-            // create svg for pie chart.
-            var piesvg = d3.select(id).append("svg")
-                    .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
-                    .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
-
-            // create function to draw the arcs of the pie slices.
-            var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
-
-            // create a function to compute the pie slice angles.
-            var pie = d3.layout.pie().sort(null).value(function(d) { return d.freq; });
-
-            // Draw the pie slices.
-            piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
-                    .each(function(d) { this._current = d; })
-                    .style("fill", function(d) { return segColor(d.data.type); })
-                    .on("mouseover",mouseover).on("mouseout",mouseout);
-
-            // create function to update pie-chart. This will be used by histogram.
-            pC.update = function(nD){
-                piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
-                        .attrTween("d", arcTween);
-            }
-            // Utility function to be called on mouseover a pie slice.
-            function mouseover(d){
-                // call the update function of histogram with new data.
-                hG.update(fData.map(function(v){
-                    return [v.ProsperScore,v.freq[d.data.type]];}),segColor(d.data.type));
-            }
-            //Utility function to be called on mouseout a pie slice.
-            function mouseout(d){
-                // call the update function of histogram with all data.
-                hG.update(fData.map(function(v){
-                    return [v.ProsperScore,v.total];}), barColor);
-            }
-            // Animating the pie-slice requiring a custom function which specifies
-            // how the intermediate paths should be drawn.
-            function arcTween(a) {
-                var i = d3.interpolate(this._current, a);
-                this._current = i(0);
-                return function(t) { return arc(i(t));    };
-            }
-            return pC;
-        }
-
-        // function to handle legend.
-        function legend(lD){
-            var leg = {};
-
-            // create table for legend.
-            var legend = d3.select(id).append("table").attr('class','legend');
-            var header = legend.append("tr");
-            header.append("th");
-            header.append("th").text("Occupation");
-            header.append("th");
-            header.append("th");
-
-            // create one row per segment.
-            var body = legend.append("tbody")
-
-            var tr = body.selectAll("tr").data(lD).enter().append("tr");
-
-            // create the first column for each segment.
-            tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
-                    .attr("width", '16').attr("height", '16')
-                    .attr("fill",function(d){ return segColor(d.type); });
-
-            tr.append("td").text(function(d){ return d.type;});
-
-            // create the third column for each segment.
-            tr.append("td").attr("class",'legendFreq')
-                    .text(function(d){ return d3.format(",")(d.freq);});
-
-            // create the fourth column for each segment.
-            tr.append("td").attr("class",'legendPerc')
-                    .text(function(d){ return getLegend(d,lD);});
-
-            // Utility function to be used to update the legend.
-            leg.update = function(nD){
-                // update the data attached to the row elements.
-                var l = legend.select("tbody").selectAll("tr").data(nD);
-
-                // update the frequencies.
-                l.select(".legendFreq").text(function(d){ return d3.format(",")(d.freq);});
-
-                // update the percentage column.
-                l.select(".legendPerc").text(function(d){ return getLegend(d,nD);});
-            };
-
-            function getLegend(d,aD){ // Utility function to compute percentage.
-                return d3.format("%")(d.freq/d3.sum(aD.map(function(v){ return v.freq; })));
-            }
-
-            return leg;
-        }
-
-        // calculate total frequency by segment for all state.
-        var tF = keys.map(function(d){
-            return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
-        });
-
-        // calculate total frequency by state for all segment.
-        var sF = fData.map(function(d){return [d.ProsperScore,d.total];});
-
-        var hG = histoGram(sF), // create the histogram.
-                pC = pieChart(tF), // create the pie-chart.
-                leg= legend(tF);  // create the legend.
 
     }
+
 </script>
 
 <script>
-    freqData =[
-        {
-            "freq": {
-                "Accountant/CPA": 36,
-                "Administrative Assistant": 46,
-                "Analyst": 21,
-                "Clerical": 25,
-                "Computer Programmer": 37,
-                "Executive": 33,
-                "Nurse (RN)": 16,
-                "Sales - Commission": 20,
-                "Skilled Labor": 15,
-                "Teacher": 31
+    data = {
+        "name": "Occupations",
+        "children": [
+            {
+                "name": "Accountant/CPA",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 36
+                    },
+                    {
+                        "name": "2",
+                        "size": 154
+                    },
+                    {
+                        "name": "3",
+                        "size": 214
+                    },
+                    {
+                        "name": "4",
+                        "size": 304
+                    },
+                    {
+                        "name": "5",
+                        "size": 280
+                    },
+                    {
+                        "name": "6",
+                        "size": 385
+                    },
+                    {
+                        "name": "7",
+                        "size": 295
+                    },
+                    {
+                        "name": "8",
+                        "size": 403
+                    },
+                    {
+                        "name": "9",
+                        "size": 256
+                    },
+                    {
+                        "name": "10",
+                        "size": 171
+                    },
+                    {
+                        "name": "11",
+                        "size": 52
+                    }
+                ]
             },
-            "ProsperScore": "1"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 154,
-                "Administrative Assistant": 201,
-                "Analyst": 136,
-                "Clerical": 187,
-                "Computer Programmer": 133,
-                "Executive": 158,
-                "Nurse (RN)": 103,
-                "Sales - Commission": 157,
-                "Skilled Labor": 148,
-                "Teacher": 189
+            {
+                "name": "Administrative Assistant",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 46
+                    },
+                    {
+                        "name": "2",
+                        "size": 201
+                    },
+                    {
+                        "name": "3",
+                        "size": 261
+                    },
+                    {
+                        "name": "4",
+                        "size": 445
+                    },
+                    {
+                        "name": "5",
+                        "size": 377
+                    },
+                    {
+                        "name": "6",
+                        "size": 438
+                    },
+                    {
+                        "name": "7",
+                        "size": 331
+                    },
+                    {
+                        "name": "8",
+                        "size": 342
+                    },
+                    {
+                        "name": "9",
+                        "size": 158
+                    },
+                    {
+                        "name": "10",
+                        "size": 77
+                    },
+                    {
+                        "name": "11",
+                        "size": 21
+                    }
+                ]
             },
-            "ProsperScore": "2"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 214,
-                "Administrative Assistant": 261,
-                "Analyst": 182,
-                "Clerical": 266,
-                "Computer Programmer": 186,
-                "Executive": 233,
-                "Nurse (RN)": 168,
-                "Sales - Commission": 210,
-                "Skilled Labor": 206,
-                "Teacher": 268
+            {
+                "name": "Analyst",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 21
+                    },
+                    {
+                        "name": "2",
+                        "size": 136
+                    },
+                    {
+                        "name": "3",
+                        "size": 182
+                    },
+                    {
+                        "name": "4",
+                        "size": 331
+                    },
+                    {
+                        "name": "5",
+                        "size": 286
+                    },
+                    {
+                        "name": "6",
+                        "size": 333
+                    },
+                    {
+                        "name": "7",
+                        "size": 315
+                    },
+                    {
+                        "name": "8",
+                        "size": 481
+                    },
+                    {
+                        "name": "9",
+                        "size": 297
+                    },
+                    {
+                        "name": "10",
+                        "size": 256
+                    },
+                    {
+                        "name": "11",
+                        "size": 73
+                    }
+                ]
             },
-            "ProsperScore": "3"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 304,
-                "Administrative Assistant": 445,
-                "Analyst": 331,
-                "Clerical": 361,
-                "Computer Programmer": 284,
-                "Executive": 393,
-                "Nurse (RN)": 328,
-                "Sales - Commission": 358,
-                "Skilled Labor": 353,
-                "Teacher": 403
+            {
+                "name": "Civil Service",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 16
+                    },
+                    {
+                        "name": "2",
+                        "size": 63
+                    },
+                    {
+                        "name": "3",
+                        "size": 95
+                    },
+                    {
+                        "name": "4",
+                        "size": 157
+                    },
+                    {
+                        "name": "5",
+                        "size": 142
+                    },
+                    {
+                        "name": "6",
+                        "size": 165
+                    },
+                    {
+                        "name": "7",
+                        "size": 155
+                    },
+                    {
+                        "name": "8",
+                        "size": 173
+                    },
+                    {
+                        "name": "9",
+                        "size": 79
+                    },
+                    {
+                        "name": "10",
+                        "size": 59
+                    },
+                    {
+                        "name": "11",
+                        "size": 23
+                    }
+                ]
             },
-            "ProsperScore": "4"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 280,
-                "Administrative Assistant": 377,
-                "Analyst": 286,
-                "Clerical": 273,
-                "Computer Programmer": 278,
-                "Executive": 333,
-                "Nurse (RN)": 234,
-                "Sales - Commission": 248,
-                "Skilled Labor": 262,
-                "Teacher": 362
+            {
+                "name": "Clerical",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 25
+                    },
+                    {
+                        "name": "2",
+                        "size": 187
+                    },
+                    {
+                        "name": "3",
+                        "size": 266
+                    },
+                    {
+                        "name": "4",
+                        "size": 361
+                    },
+                    {
+                        "name": "5",
+                        "size": 273
+                    },
+                    {
+                        "name": "6",
+                        "size": 329
+                    },
+                    {
+                        "name": "7",
+                        "size": 267
+                    },
+                    {
+                        "name": "8",
+                        "size": 218
+                    },
+                    {
+                        "name": "9",
+                        "size": 111
+                    },
+                    {
+                        "name": "10",
+                        "size": 42
+                    },
+                    {
+                        "name": "11",
+                        "size": 8
+                    }
+                ]
             },
-            "ProsperScore": "5"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 385,
-                "Administrative Assistant": 438,
-                "Analyst": 333,
-                "Clerical": 329,
-                "Computer Programmer": 385,
-                "Executive": 419,
-                "Nurse (RN)": 324,
-                "Sales - Commission": 304,
-                "Skilled Labor": 354,
-                "Teacher": 469
+            {
+                "name": "Computer Programmer",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 37
+                    },
+                    {
+                        "name": "2",
+                        "size": 133
+                    },
+                    {
+                        "name": "3",
+                        "size": 186
+                    },
+                    {
+                        "name": "4",
+                        "size": 284
+                    },
+                    {
+                        "name": "5",
+                        "size": 278
+                    },
+                    {
+                        "name": "6",
+                        "size": 385
+                    },
+                    {
+                        "name": "7",
+                        "size": 381
+                    },
+                    {
+                        "name": "8",
+                        "size": 582
+                    },
+                    {
+                        "name": "9",
+                        "size": 439
+                    },
+                    {
+                        "name": "10",
+                        "size": 383
+                    },
+                    {
+                        "name": "11",
+                        "size": 112
+                    }
+                ]
             },
-            "ProsperScore": "6"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 295,
-                "Administrative Assistant": 331,
-                "Analyst": 315,
-                "Clerical": 267,
-                "Computer Programmer": 381,
-                "Executive": 439,
-                "Nurse (RN)": 291,
-                "Sales - Commission": 289,
-                "Skilled Labor": 261,
-                "Teacher": 347
+            {
+                "name": "Construction",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 16
+                    },
+                    {
+                        "name": "2",
+                        "size": 103
+                    },
+                    {
+                        "name": "3",
+                        "size": 110
+                    },
+                    {
+                        "name": "4",
+                        "size": 251
+                    },
+                    {
+                        "name": "5",
+                        "size": 160
+                    },
+                    {
+                        "name": "6",
+                        "size": 169
+                    },
+                    {
+                        "name": "7",
+                        "size": 171
+                    },
+                    {
+                        "name": "8",
+                        "size": 156
+                    },
+                    {
+                        "name": "9",
+                        "size": 106
+                    },
+                    {
+                        "name": "10",
+                        "size": 60
+                    },
+                    {
+                        "name": "11",
+                        "size": 11
+                    }
+                ]
             },
-            "ProsperScore": "7"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 403,
-                "Administrative Assistant": 342,
-                "Analyst": 481,
-                "Clerical": 218,
-                "Computer Programmer": 582,
-                "Executive": 575,
-                "Nurse (RN)": 330,
-                "Sales - Commission": 356,
-                "Skilled Labor": 304,
-                "Teacher": 419
+            {
+                "name": "Engineer - Electrical",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 6
+                    },
+                    {
+                        "name": "2",
+                        "size": 38
+                    },
+                    {
+                        "name": "3",
+                        "size": 56
+                    },
+                    {
+                        "name": "4",
+                        "size": 113
+                    },
+                    {
+                        "name": "5",
+                        "size": 70
+                    },
+                    {
+                        "name": "6",
+                        "size": 100
+                    },
+                    {
+                        "name": "7",
+                        "size": 119
+                    },
+                    {
+                        "name": "8",
+                        "size": 147
+                    },
+                    {
+                        "name": "9",
+                        "size": 113
+                    },
+                    {
+                        "name": "10",
+                        "size": 101
+                    },
+                    {
+                        "name": "11",
+                        "size": 30
+                    }
+                ]
             },
-            "ProsperScore": "8"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 256,
-                "Administrative Assistant": 158,
-                "Analyst": 297,
-                "Clerical": 111,
-                "Computer Programmer": 439,
-                "Executive": 387,
-                "Nurse (RN)": 190,
-                "Sales - Commission": 195,
-                "Skilled Labor": 156,
-                "Teacher": 222
+            {
+                "name": "Engineer - Mechanical",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 8
+                    },
+                    {
+                        "name": "2",
+                        "size": 50
+                    },
+                    {
+                        "name": "3",
+                        "size": 81
+                    },
+                    {
+                        "name": "4",
+                        "size": 138
+                    },
+                    {
+                        "name": "5",
+                        "size": 122
+                    },
+                    {
+                        "name": "6",
+                        "size": 147
+                    },
+                    {
+                        "name": "7",
+                        "size": 151
+                    },
+                    {
+                        "name": "8",
+                        "size": 190
+                    },
+                    {
+                        "name": "9",
+                        "size": 123
+                    },
+                    {
+                        "name": "10",
+                        "size": 94
+                    },
+                    {
+                        "name": "11",
+                        "size": 22
+                    }
+                ]
             },
-            "ProsperScore": "9"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 171,
-                "Administrative Assistant": 77,
-                "Analyst": 256,
-                "Clerical": 42,
-                "Computer Programmer": 383,
-                "Executive": 337,
-                "Nurse (RN)": 116,
-                "Sales - Commission": 133,
-                "Skilled Labor": 79,
-                "Teacher": 106
+            {
+                "name": "Executive",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 33
+                    },
+                    {
+                        "name": "2",
+                        "size": 158
+                    },
+                    {
+                        "name": "3",
+                        "size": 233
+                    },
+                    {
+                        "name": "4",
+                        "size": 393
+                    },
+                    {
+                        "name": "5",
+                        "size": 333
+                    },
+                    {
+                        "name": "6",
+                        "size": 419
+                    },
+                    {
+                        "name": "7",
+                        "size": 439
+                    },
+                    {
+                        "name": "8",
+                        "size": 575
+                    },
+                    {
+                        "name": "9",
+                        "size": 387
+                    },
+                    {
+                        "name": "10",
+                        "size": 337
+                    },
+                    {
+                        "name": "11",
+                        "size": 130
+                    }
+                ]
             },
-            "ProsperScore": "10"
-        },
-        {
-            "freq": {
-                "Accountant/CPA": 52,
-                "Administrative Assistant": 21,
-                "Analyst": 73,
-                "Clerical": 8,
-                "Computer Programmer": 112,
-                "Executive": 130,
-                "Nurse (RN)": 45,
-                "Sales - Commission": 48,
-                "Skilled Labor": 19,
-                "Teacher": 42
+            {
+                "name": "Food Service Manager",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 5
+                    },
+                    {
+                        "name": "2",
+                        "size": 74
+                    },
+                    {
+                        "name": "3",
+                        "size": 96
+                    },
+                    {
+                        "name": "4",
+                        "size": 155
+                    },
+                    {
+                        "name": "5",
+                        "size": 120
+                    },
+                    {
+                        "name": "6",
+                        "size": 158
+                    },
+                    {
+                        "name": "7",
+                        "size": 108
+                    },
+                    {
+                        "name": "8",
+                        "size": 149
+                    },
+                    {
+                        "name": "9",
+                        "size": 79
+                    },
+                    {
+                        "name": "10",
+                        "size": 40
+                    },
+                    {
+                        "name": "11",
+                        "size": 9
+                    }
+                ]
             },
-            "ProsperScore": "11"
-        }
-    ]
+            {
+                "name": "Laborer",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 9
+                    },
+                    {
+                        "name": "2",
+                        "size": 107
+                    },
+                    {
+                        "name": "3",
+                        "size": 139
+                    },
+                    {
+                        "name": "4",
+                        "size": 210
+                    },
+                    {
+                        "name": "5",
+                        "size": 164
+                    },
+                    {
+                        "name": "6",
+                        "size": 195
+                    },
+                    {
+                        "name": "7",
+                        "size": 157
+                    },
+                    {
+                        "name": "8",
+                        "size": 130
+                    },
+                    {
+                        "name": "9",
+                        "size": 63
+                    },
+                    {
+                        "name": "10",
+                        "size": 20
+                    },
+                    {
+                        "name": "11",
+                        "size": 6
+                    }
+                ]
+            },
+            {
+                "name": "Nurse (RN)",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 16
+                    },
+                    {
+                        "name": "2",
+                        "size": 103
+                    },
+                    {
+                        "name": "3",
+                        "size": 168
+                    },
+                    {
+                        "name": "4",
+                        "size": 328
+                    },
+                    {
+                        "name": "5",
+                        "size": 234
+                    },
+                    {
+                        "name": "6",
+                        "size": 324
+                    },
+                    {
+                        "name": "7",
+                        "size": 291
+                    },
+                    {
+                        "name": "8",
+                        "size": 330
+                    },
+                    {
+                        "name": "9",
+                        "size": 190
+                    },
+                    {
+                        "name": "10",
+                        "size": 116
+                    },
+                    {
+                        "name": "11",
+                        "size": 45
+                    }
+                ]
+            },
+            {
+                "name": "Police Officer",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 10
+                    },
+                    {
+                        "name": "2",
+                        "size": 78
+                    },
+                    {
+                        "name": "3",
+                        "size": 100
+                    },
+                    {
+                        "name": "4",
+                        "size": 187
+                    },
+                    {
+                        "name": "5",
+                        "size": 151
+                    },
+                    {
+                        "name": "6",
+                        "size": 219
+                    },
+                    {
+                        "name": "7",
+                        "size": 177
+                    },
+                    {
+                        "name": "8",
+                        "size": 164
+                    },
+                    {
+                        "name": "9",
+                        "size": 94
+                    },
+                    {
+                        "name": "10",
+                        "size": 66
+                    },
+                    {
+                        "name": "11",
+                        "size": 14
+                    }
+                ]
+            },
+            {
+                "name": "Retail Management",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 15
+                    },
+                    {
+                        "name": "2",
+                        "size": 149
+                    },
+                    {
+                        "name": "3",
+                        "size": 161
+                    },
+                    {
+                        "name": "4",
+                        "size": 287
+                    },
+                    {
+                        "name": "5",
+                        "size": 251
+                    },
+                    {
+                        "name": "6",
+                        "size": 346
+                    },
+                    {
+                        "name": "7",
+                        "size": 271
+                    },
+                    {
+                        "name": "8",
+                        "size": 263
+                    },
+                    {
+                        "name": "9",
+                        "size": 144
+                    },
+                    {
+                        "name": "10",
+                        "size": 72
+                    },
+                    {
+                        "name": "11",
+                        "size": 19
+                    }
+                ]
+            },
+            {
+                "name": "Sales - Commission",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 20
+                    },
+                    {
+                        "name": "2",
+                        "size": 157
+                    },
+                    {
+                        "name": "3",
+                        "size": 210
+                    },
+                    {
+                        "name": "4",
+                        "size": 358
+                    },
+                    {
+                        "name": "5",
+                        "size": 248
+                    },
+                    {
+                        "name": "6",
+                        "size": 304
+                    },
+                    {
+                        "name": "7",
+                        "size": 289
+                    },
+                    {
+                        "name": "8",
+                        "size": 356
+                    },
+                    {
+                        "name": "9",
+                        "size": 195
+                    },
+                    {
+                        "name": "10",
+                        "size": 133
+                    },
+                    {
+                        "name": "11",
+                        "size": 48
+                    }
+                ]
+            },
+            {
+                "name": "Sales - Retail",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 34
+                    },
+                    {
+                        "name": "2",
+                        "size": 196
+                    },
+                    {
+                        "name": "3",
+                        "size": 247
+                    },
+                    {
+                        "name": "4",
+                        "size": 351
+                    },
+                    {
+                        "name": "5",
+                        "size": 235
+                    },
+                    {
+                        "name": "6",
+                        "size": 285
+                    },
+                    {
+                        "name": "7",
+                        "size": 243
+                    },
+                    {
+                        "name": "8",
+                        "size": 233
+                    },
+                    {
+                        "name": "9",
+                        "size": 115
+                    },
+                    {
+                        "name": "10",
+                        "size": 49
+                    },
+                    {
+                        "name": "11",
+                        "size": 24
+                    }
+                ]
+            },
+            {
+                "name": "Skilled Labor",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 15
+                    },
+                    {
+                        "name": "2",
+                        "size": 148
+                    },
+                    {
+                        "name": "3",
+                        "size": 206
+                    },
+                    {
+                        "name": "4",
+                        "size": 353
+                    },
+                    {
+                        "name": "5",
+                        "size": 262
+                    },
+                    {
+                        "name": "6",
+                        "size": 354
+                    },
+                    {
+                        "name": "7",
+                        "size": 261
+                    },
+                    {
+                        "name": "8",
+                        "size": 304
+                    },
+                    {
+                        "name": "9",
+                        "size": 156
+                    },
+                    {
+                        "name": "10",
+                        "size": 79
+                    },
+                    {
+                        "name": "11",
+                        "size": 19
+                    }
+                ]
+            },
+            {
+                "name": "Teacher",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 31
+                    },
+                    {
+                        "name": "2",
+                        "size": 189
+                    },
+                    {
+                        "name": "3",
+                        "size": 268
+                    },
+                    {
+                        "name": "4",
+                        "size": 403
+                    },
+                    {
+                        "name": "5",
+                        "size": 362
+                    },
+                    {
+                        "name": "6",
+                        "size": 469
+                    },
+                    {
+                        "name": "7",
+                        "size": 347
+                    },
+                    {
+                        "name": "8",
+                        "size": 419
+                    },
+                    {
+                        "name": "9",
+                        "size": 222
+                    },
+                    {
+                        "name": "10",
+                        "size": 106
+                    },
+                    {
+                        "name": "11",
+                        "size": 42
+                    }
+                ]
+            },
+            {
+                "name": "Truck Driver",
+                "children": [
+                    {
+                        "name": "1",
+                        "size": 15
+                    },
+                    {
+                        "name": "2",
+                        "size": 113
+                    },
+                    {
+                        "name": "3",
+                        "size": 134
+                    },
+                    {
+                        "name": "4",
+                        "size": 243
+                    },
+                    {
+                        "name": "5",
+                        "size": 154
+                    },
+                    {
+                        "name": "6",
+                        "size": 199
+                    },
+                    {
+                        "name": "7",
+                        "size": 203
+                    },
+                    {
+                        "name": "8",
+                        "size": 159
+                    },
+                    {
+                        "name": "9",
+                        "size": 87
+                    },
+                    {
+                        "name": "10",
+                        "size": 35
+                    },
+                    {
+                        "name": "11",
+                        "size": 15
+                    }
+                ]
+            }
+        ]
+    };
 
-    dashboard('#dashboard',freqData);
+    hierarchical(data);
 </script>
