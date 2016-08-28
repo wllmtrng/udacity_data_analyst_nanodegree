@@ -1,4 +1,6 @@
 
+View at http://bl.ocks.org/wllmtrng/ff72bf455078448e5e40ece3bff15354
+
 ## Design 
 As I was performing the initial exploratory data analysis on the Prosper Loan Dataset, I decided I wanted to do a bit
 more exploration on background of people who seek to find loans. My initial thoughts were that people who weren't
