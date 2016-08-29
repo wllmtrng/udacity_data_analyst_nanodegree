@@ -21,6 +21,7 @@ root["children"] = _(children)
     });
   })
   .toPairs()
+  .sortBy((node) => -_.sum(_.map(node[1], "size")))
   .map((pair) => _.zipObject(["name", "children"], pair))
   .value();
 

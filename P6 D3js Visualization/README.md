@@ -2,14 +2,19 @@
 View at http://bl.ocks.org/wllmtrng/ff72bf455078448e5e40ece3bff15354
 
 ## Design 
-As I was performing the initial exploratory data analysis on the Prosper Loan Dataset, I decided I wanted to do a bit
-more exploration on background of people who seek to find loans. My initial thoughts were that people who weren't
-credit worthy were more likely to use something like Prosper Loans. I also wondered if there are occupations who are, as
-a group, more credit worthy than others.
+The Prosper Marketplace provides an alternative avenue for people to invest and borrow money.
+When a potential borrower fills out an application, a Prosper Score from 1 to 11 is assigned.
+Lending to an individual of a lower score will have a better return on investment,
+but also have increased chances of defaulting. Lending to an individual of a higher score will have a
+lower chance of defaulting, but a lower return on investment.
 
-I chose to use this [dashboard](http://bl.ocks.org/NPashaP/96447623ef4d342ee09b) type of visualization because:
+Quite often, investors use historical data and group past borrowers by certain criteria to
+compare against potential borrowers of similar criteria. One criteria used often is Occupations.
+Potential borrowers with Occupations that have a higher Prosper Score on average can be generally more credit worthy.
 
-1. Bar plots are useful in showing the difference in frequency among the Proser Scores.
+Initially I chose to use this [dashboard](http://bl.ocks.org/NPashaP/96447623ef4d342ee09b) type of visualization because:
+
+1. Bar plots are useful in showing the difference in frequency among the Prosper Scores.
 2. The Pie Chart and Legend on the right is able to provide secondary distribution of Occupation for a selected Prosper Score.
 3. The Pie Chart can show drastic differences between the distribution of Occupation for a certain Prosper Score.
 4. The Legend complements the Pie Chart by showing differences between Occupations with higher resolution.
@@ -74,6 +79,7 @@ and Accountants take much of the proportion. It is ironic that for the Prosper S
 ## Resources and References
 - [Prosper Loan Data](https://www.google.com/url?q=https://s3.amazonaws.com/udacity-hosted-downloads/ud651/prosperLoanData.csv&sa=D&ust=1470535594989000&usg=AFQjCNFnP-1MaAOimLzkxa8Wjq5TC7Ez-Q)
 - [Prosper Loan Data Dictionary](https://www.google.com/url?q=https://docs.google.com/spreadsheet/ccc?key%3D0AllIqIyvWZdadDd5NTlqZ1pBMHlsUjdrOTZHaVBuSlE%26usp%3Dsharing&sa=D&ust=1470535594992000&usg=AFQjCNE55Bq3n5BUUUUn6t_0QAQ7GxqkSA)
+  - The description for Prosper Scores is incorrect. Prosper Scores range from 1 - 11.
 - [2009 Post Relaunch - Wikipedia](https://en.wikipedia.org/wiki/Prosper_Marketplace#2009_post_SEC_relaunch)
 - [1st Feedback](https://discussions.udacity.com/t/propser-loans-feedback-request/185271)
 - [D3 Axis and Titles](http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html)

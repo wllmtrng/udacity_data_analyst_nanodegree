@@ -2,247 +2,51 @@
   "name": "Occupations",
   "children": [
     {
-      "name": "Accountant/CPA",
+      "name": "Executive",
       "children": [
         {
           "name": "1",
-          "size": 36
+          "size": 33
         },
         {
           "name": "2",
-          "size": 154
-        },
-        {
-          "name": "3",
-          "size": 214
-        },
-        {
-          "name": "4",
-          "size": 304
-        },
-        {
-          "name": "5",
-          "size": 280
-        },
-        {
-          "name": "6",
-          "size": 385
-        },
-        {
-          "name": "7",
-          "size": 295
-        },
-        {
-          "name": "8",
-          "size": 403
-        },
-        {
-          "name": "9",
-          "size": 256
-        },
-        {
-          "name": "10",
-          "size": 171
-        },
-        {
-          "name": "11",
-          "size": 52
-        }
-      ]
-    },
-    {
-      "name": "Administrative Assistant",
-      "children": [
-        {
-          "name": "1",
-          "size": 46
-        },
-        {
-          "name": "2",
-          "size": 201
-        },
-        {
-          "name": "3",
-          "size": 261
-        },
-        {
-          "name": "4",
-          "size": 445
-        },
-        {
-          "name": "5",
-          "size": 377
-        },
-        {
-          "name": "6",
-          "size": 438
-        },
-        {
-          "name": "7",
-          "size": 331
-        },
-        {
-          "name": "8",
-          "size": 342
-        },
-        {
-          "name": "9",
           "size": 158
         },
         {
-          "name": "10",
-          "size": 77
-        },
-        {
-          "name": "11",
-          "size": 21
-        }
-      ]
-    },
-    {
-      "name": "Analyst",
-      "children": [
-        {
-          "name": "1",
-          "size": 21
-        },
-        {
-          "name": "2",
-          "size": 136
-        },
-        {
           "name": "3",
-          "size": 182
+          "size": 233
         },
         {
           "name": "4",
-          "size": 331
+          "size": 393
         },
         {
           "name": "5",
-          "size": 286
-        },
-        {
-          "name": "6",
           "size": 333
         },
         {
-          "name": "7",
-          "size": 315
-        },
-        {
-          "name": "8",
-          "size": 481
-        },
-        {
-          "name": "9",
-          "size": 297
-        },
-        {
-          "name": "10",
-          "size": 256
-        },
-        {
-          "name": "11",
-          "size": 73
-        }
-      ]
-    },
-    {
-      "name": "Civil Service",
-      "children": [
-        {
-          "name": "1",
-          "size": 16
-        },
-        {
-          "name": "2",
-          "size": 63
-        },
-        {
-          "name": "3",
-          "size": 95
-        },
-        {
-          "name": "4",
-          "size": 157
-        },
-        {
-          "name": "5",
-          "size": 142
-        },
-        {
           "name": "6",
-          "size": 165
+          "size": 419
         },
         {
           "name": "7",
-          "size": 155
+          "size": 439
         },
         {
           "name": "8",
-          "size": 173
+          "size": 575
         },
         {
           "name": "9",
-          "size": 79
+          "size": 387
         },
         {
           "name": "10",
-          "size": 59
+          "size": 337
         },
         {
           "name": "11",
-          "size": 23
-        }
-      ]
-    },
-    {
-      "name": "Clerical",
-      "children": [
-        {
-          "name": "1",
-          "size": 25
-        },
-        {
-          "name": "2",
-          "size": 187
-        },
-        {
-          "name": "3",
-          "size": 266
-        },
-        {
-          "name": "4",
-          "size": 361
-        },
-        {
-          "name": "5",
-          "size": 273
-        },
-        {
-          "name": "6",
-          "size": 329
-        },
-        {
-          "name": "7",
-          "size": 267
-        },
-        {
-          "name": "8",
-          "size": 218
-        },
-        {
-          "name": "9",
-          "size": 111
-        },
-        {
-          "name": "10",
-          "size": 42
-        },
-        {
-          "name": "11",
-          "size": 8
+          "size": 130
         }
       ]
     },
@@ -296,443 +100,198 @@
       ]
     },
     {
-      "name": "Construction",
+      "name": "Teacher",
       "children": [
         {
           "name": "1",
-          "size": 16
+          "size": 31
         },
         {
           "name": "2",
-          "size": 103
+          "size": 189
         },
         {
           "name": "3",
-          "size": 110
+          "size": 268
         },
         {
           "name": "4",
-          "size": 251
+          "size": 403
         },
         {
           "name": "5",
-          "size": 160
+          "size": 362
         },
         {
           "name": "6",
-          "size": 169
+          "size": 469
         },
         {
           "name": "7",
-          "size": 171
+          "size": 347
         },
         {
           "name": "8",
-          "size": 156
-        },
-        {
-          "name": "9",
-          "size": 106
-        },
-        {
-          "name": "10",
-          "size": 60
-        },
-        {
-          "name": "11",
-          "size": 11
-        }
-      ]
-    },
-    {
-      "name": "Engineer - Electrical",
-      "children": [
-        {
-          "name": "1",
-          "size": 6
-        },
-        {
-          "name": "2",
-          "size": 38
-        },
-        {
-          "name": "3",
-          "size": 56
-        },
-        {
-          "name": "4",
-          "size": 113
-        },
-        {
-          "name": "5",
-          "size": 70
-        },
-        {
-          "name": "6",
-          "size": 100
-        },
-        {
-          "name": "7",
-          "size": 119
-        },
-        {
-          "name": "8",
-          "size": 147
-        },
-        {
-          "name": "9",
-          "size": 113
-        },
-        {
-          "name": "10",
-          "size": 101
-        },
-        {
-          "name": "11",
-          "size": 30
-        }
-      ]
-    },
-    {
-      "name": "Engineer - Mechanical",
-      "children": [
-        {
-          "name": "1",
-          "size": 8
-        },
-        {
-          "name": "2",
-          "size": 50
-        },
-        {
-          "name": "3",
-          "size": 81
-        },
-        {
-          "name": "4",
-          "size": 138
-        },
-        {
-          "name": "5",
-          "size": 122
-        },
-        {
-          "name": "6",
-          "size": 147
-        },
-        {
-          "name": "7",
-          "size": 151
-        },
-        {
-          "name": "8",
-          "size": 190
-        },
-        {
-          "name": "9",
-          "size": 123
-        },
-        {
-          "name": "10",
-          "size": 94
-        },
-        {
-          "name": "11",
-          "size": 22
-        }
-      ]
-    },
-    {
-      "name": "Executive",
-      "children": [
-        {
-          "name": "1",
-          "size": 33
-        },
-        {
-          "name": "2",
-          "size": 158
-        },
-        {
-          "name": "3",
-          "size": 233
-        },
-        {
-          "name": "4",
-          "size": 393
-        },
-        {
-          "name": "5",
-          "size": 333
-        },
-        {
-          "name": "6",
           "size": 419
         },
         {
-          "name": "7",
-          "size": 439
-        },
-        {
-          "name": "8",
-          "size": 575
-        },
-        {
           "name": "9",
-          "size": 387
+          "size": 222
         },
         {
           "name": "10",
-          "size": 337
+          "size": 106
         },
         {
           "name": "11",
-          "size": 130
+          "size": 42
         }
       ]
     },
     {
-      "name": "Food Service Management",
+      "name": "Analyst",
       "children": [
         {
           "name": "1",
-          "size": 5
+          "size": 21
         },
         {
           "name": "2",
-          "size": 74
+          "size": 136
         },
         {
           "name": "3",
-          "size": 96
+          "size": 182
         },
         {
           "name": "4",
-          "size": 155
+          "size": 331
         },
         {
           "name": "5",
-          "size": 120
+          "size": 286
         },
         {
           "name": "6",
+          "size": 333
+        },
+        {
+          "name": "7",
+          "size": 315
+        },
+        {
+          "name": "8",
+          "size": 481
+        },
+        {
+          "name": "9",
+          "size": 297
+        },
+        {
+          "name": "10",
+          "size": 256
+        },
+        {
+          "name": "11",
+          "size": 73
+        }
+      ]
+    },
+    {
+      "name": "Administrative Assistant",
+      "children": [
+        {
+          "name": "1",
+          "size": 46
+        },
+        {
+          "name": "2",
+          "size": 201
+        },
+        {
+          "name": "3",
+          "size": 261
+        },
+        {
+          "name": "4",
+          "size": 445
+        },
+        {
+          "name": "5",
+          "size": 377
+        },
+        {
+          "name": "6",
+          "size": 438
+        },
+        {
+          "name": "7",
+          "size": 331
+        },
+        {
+          "name": "8",
+          "size": 342
+        },
+        {
+          "name": "9",
           "size": 158
         },
         {
-          "name": "7",
-          "size": 108
-        },
-        {
-          "name": "8",
-          "size": 149
-        },
-        {
-          "name": "9",
-          "size": 79
-        },
-        {
           "name": "10",
-          "size": 40
+          "size": 77
         },
         {
           "name": "11",
-          "size": 9
+          "size": 21
         }
       ]
     },
     {
-      "name": "Laborer",
+      "name": "Accountant/CPA",
       "children": [
         {
           "name": "1",
-          "size": 9
+          "size": 36
         },
         {
           "name": "2",
-          "size": 107
+          "size": 154
         },
         {
           "name": "3",
-          "size": 139
+          "size": 214
         },
         {
           "name": "4",
-          "size": 210
+          "size": 304
         },
         {
           "name": "5",
-          "size": 164
+          "size": 280
         },
         {
           "name": "6",
-          "size": 195
+          "size": 385
         },
         {
           "name": "7",
-          "size": 157
+          "size": 295
         },
         {
           "name": "8",
-          "size": 130
+          "size": 403
         },
         {
           "name": "9",
-          "size": 63
+          "size": 256
         },
         {
           "name": "10",
-          "size": 20
+          "size": 171
         },
         {
           "name": "11",
-          "size": 6
-        }
-      ]
-    },
-    {
-      "name": "Nurse (RN)",
-      "children": [
-        {
-          "name": "1",
-          "size": 16
-        },
-        {
-          "name": "2",
-          "size": 103
-        },
-        {
-          "name": "3",
-          "size": 168
-        },
-        {
-          "name": "4",
-          "size": 328
-        },
-        {
-          "name": "5",
-          "size": 234
-        },
-        {
-          "name": "6",
-          "size": 324
-        },
-        {
-          "name": "7",
-          "size": 291
-        },
-        {
-          "name": "8",
-          "size": 330
-        },
-        {
-          "name": "9",
-          "size": 190
-        },
-        {
-          "name": "10",
-          "size": 116
-        },
-        {
-          "name": "11",
-          "size": 45
-        }
-      ]
-    },
-    {
-      "name": "Police Officer/Correction Officer",
-      "children": [
-        {
-          "name": "1",
-          "size": 10
-        },
-        {
-          "name": "2",
-          "size": 78
-        },
-        {
-          "name": "3",
-          "size": 100
-        },
-        {
-          "name": "4",
-          "size": 187
-        },
-        {
-          "name": "5",
-          "size": 151
-        },
-        {
-          "name": "6",
-          "size": 219
-        },
-        {
-          "name": "7",
-          "size": 177
-        },
-        {
-          "name": "8",
-          "size": 164
-        },
-        {
-          "name": "9",
-          "size": 94
-        },
-        {
-          "name": "10",
-          "size": 66
-        },
-        {
-          "name": "11",
-          "size": 14
-        }
-      ]
-    },
-    {
-      "name": "Retail Management",
-      "children": [
-        {
-          "name": "1",
-          "size": 15
-        },
-        {
-          "name": "2",
-          "size": 149
-        },
-        {
-          "name": "3",
-          "size": 161
-        },
-        {
-          "name": "4",
-          "size": 287
-        },
-        {
-          "name": "5",
-          "size": 251
-        },
-        {
-          "name": "6",
-          "size": 346
-        },
-        {
-          "name": "7",
-          "size": 271
-        },
-        {
-          "name": "8",
-          "size": 263
-        },
-        {
-          "name": "9",
-          "size": 144
-        },
-        {
-          "name": "10",
-          "size": 72
-        },
-        {
-          "name": "11",
-          "size": 19
+          "size": 52
         }
       ]
     },
@@ -786,55 +345,6 @@
       ]
     },
     {
-      "name": "Sales - Retail",
-      "children": [
-        {
-          "name": "1",
-          "size": 34
-        },
-        {
-          "name": "2",
-          "size": 196
-        },
-        {
-          "name": "3",
-          "size": 247
-        },
-        {
-          "name": "4",
-          "size": 351
-        },
-        {
-          "name": "5",
-          "size": 235
-        },
-        {
-          "name": "6",
-          "size": 285
-        },
-        {
-          "name": "7",
-          "size": 243
-        },
-        {
-          "name": "8",
-          "size": 233
-        },
-        {
-          "name": "9",
-          "size": 115
-        },
-        {
-          "name": "10",
-          "size": 49
-        },
-        {
-          "name": "11",
-          "size": 24
-        }
-      ]
-    },
-    {
       "name": "Skilled Labor",
       "children": [
         {
@@ -884,51 +394,198 @@
       ]
     },
     {
-      "name": "Teacher",
+      "name": "Nurse (RN)",
       "children": [
         {
           "name": "1",
-          "size": 31
+          "size": 16
         },
         {
           "name": "2",
-          "size": 189
+          "size": 103
         },
         {
           "name": "3",
-          "size": 268
+          "size": 168
         },
         {
           "name": "4",
-          "size": 403
+          "size": 328
         },
         {
           "name": "5",
-          "size": 362
+          "size": 234
         },
         {
           "name": "6",
-          "size": 469
+          "size": 324
         },
         {
           "name": "7",
-          "size": 347
+          "size": 291
         },
         {
           "name": "8",
-          "size": 419
+          "size": 330
         },
         {
           "name": "9",
-          "size": 222
+          "size": 190
         },
         {
           "name": "10",
-          "size": 106
+          "size": 116
         },
         {
           "name": "11",
+          "size": 45
+        }
+      ]
+    },
+    {
+      "name": "Clerical",
+      "children": [
+        {
+          "name": "1",
+          "size": 25
+        },
+        {
+          "name": "2",
+          "size": 187
+        },
+        {
+          "name": "3",
+          "size": 266
+        },
+        {
+          "name": "4",
+          "size": 361
+        },
+        {
+          "name": "5",
+          "size": 273
+        },
+        {
+          "name": "6",
+          "size": 329
+        },
+        {
+          "name": "7",
+          "size": 267
+        },
+        {
+          "name": "8",
+          "size": 218
+        },
+        {
+          "name": "9",
+          "size": 111
+        },
+        {
+          "name": "10",
           "size": 42
+        },
+        {
+          "name": "11",
+          "size": 8
+        }
+      ]
+    },
+    {
+      "name": "Sales - Retail",
+      "children": [
+        {
+          "name": "1",
+          "size": 34
+        },
+        {
+          "name": "2",
+          "size": 196
+        },
+        {
+          "name": "3",
+          "size": 247
+        },
+        {
+          "name": "4",
+          "size": 351
+        },
+        {
+          "name": "5",
+          "size": 235
+        },
+        {
+          "name": "6",
+          "size": 285
+        },
+        {
+          "name": "7",
+          "size": 243
+        },
+        {
+          "name": "8",
+          "size": 233
+        },
+        {
+          "name": "9",
+          "size": 115
+        },
+        {
+          "name": "10",
+          "size": 49
+        },
+        {
+          "name": "11",
+          "size": 24
+        }
+      ]
+    },
+    {
+      "name": "Retail Management",
+      "children": [
+        {
+          "name": "1",
+          "size": 15
+        },
+        {
+          "name": "2",
+          "size": 149
+        },
+        {
+          "name": "3",
+          "size": 161
+        },
+        {
+          "name": "4",
+          "size": 287
+        },
+        {
+          "name": "5",
+          "size": 251
+        },
+        {
+          "name": "6",
+          "size": 346
+        },
+        {
+          "name": "7",
+          "size": 271
+        },
+        {
+          "name": "8",
+          "size": 263
+        },
+        {
+          "name": "9",
+          "size": 144
+        },
+        {
+          "name": "10",
+          "size": 72
+        },
+        {
+          "name": "11",
+          "size": 19
         }
       ]
     },
@@ -978,6 +635,349 @@
         {
           "name": "11",
           "size": 15
+        }
+      ]
+    },
+    {
+      "name": "Construction",
+      "children": [
+        {
+          "name": "1",
+          "size": 16
+        },
+        {
+          "name": "2",
+          "size": 103
+        },
+        {
+          "name": "3",
+          "size": 110
+        },
+        {
+          "name": "4",
+          "size": 251
+        },
+        {
+          "name": "5",
+          "size": 160
+        },
+        {
+          "name": "6",
+          "size": 169
+        },
+        {
+          "name": "7",
+          "size": 171
+        },
+        {
+          "name": "8",
+          "size": 156
+        },
+        {
+          "name": "9",
+          "size": 106
+        },
+        {
+          "name": "10",
+          "size": 60
+        },
+        {
+          "name": "11",
+          "size": 11
+        }
+      ]
+    },
+    {
+      "name": "Police Officer/Correction Officer",
+      "children": [
+        {
+          "name": "1",
+          "size": 10
+        },
+        {
+          "name": "2",
+          "size": 78
+        },
+        {
+          "name": "3",
+          "size": 100
+        },
+        {
+          "name": "4",
+          "size": 187
+        },
+        {
+          "name": "5",
+          "size": 151
+        },
+        {
+          "name": "6",
+          "size": 219
+        },
+        {
+          "name": "7",
+          "size": 177
+        },
+        {
+          "name": "8",
+          "size": 164
+        },
+        {
+          "name": "9",
+          "size": 94
+        },
+        {
+          "name": "10",
+          "size": 66
+        },
+        {
+          "name": "11",
+          "size": 14
+        }
+      ]
+    },
+    {
+      "name": "Laborer",
+      "children": [
+        {
+          "name": "1",
+          "size": 9
+        },
+        {
+          "name": "2",
+          "size": 107
+        },
+        {
+          "name": "3",
+          "size": 139
+        },
+        {
+          "name": "4",
+          "size": 210
+        },
+        {
+          "name": "5",
+          "size": 164
+        },
+        {
+          "name": "6",
+          "size": 195
+        },
+        {
+          "name": "7",
+          "size": 157
+        },
+        {
+          "name": "8",
+          "size": 130
+        },
+        {
+          "name": "9",
+          "size": 63
+        },
+        {
+          "name": "10",
+          "size": 20
+        },
+        {
+          "name": "11",
+          "size": 6
+        }
+      ]
+    },
+    {
+      "name": "Civil Service",
+      "children": [
+        {
+          "name": "1",
+          "size": 16
+        },
+        {
+          "name": "2",
+          "size": 63
+        },
+        {
+          "name": "3",
+          "size": 95
+        },
+        {
+          "name": "4",
+          "size": 157
+        },
+        {
+          "name": "5",
+          "size": 142
+        },
+        {
+          "name": "6",
+          "size": 165
+        },
+        {
+          "name": "7",
+          "size": 155
+        },
+        {
+          "name": "8",
+          "size": 173
+        },
+        {
+          "name": "9",
+          "size": 79
+        },
+        {
+          "name": "10",
+          "size": 59
+        },
+        {
+          "name": "11",
+          "size": 23
+        }
+      ]
+    },
+    {
+      "name": "Engineer - Mechanical",
+      "children": [
+        {
+          "name": "1",
+          "size": 8
+        },
+        {
+          "name": "2",
+          "size": 50
+        },
+        {
+          "name": "3",
+          "size": 81
+        },
+        {
+          "name": "4",
+          "size": 138
+        },
+        {
+          "name": "5",
+          "size": 122
+        },
+        {
+          "name": "6",
+          "size": 147
+        },
+        {
+          "name": "7",
+          "size": 151
+        },
+        {
+          "name": "8",
+          "size": 190
+        },
+        {
+          "name": "9",
+          "size": 123
+        },
+        {
+          "name": "10",
+          "size": 94
+        },
+        {
+          "name": "11",
+          "size": 22
+        }
+      ]
+    },
+    {
+      "name": "Food Service Management",
+      "children": [
+        {
+          "name": "1",
+          "size": 5
+        },
+        {
+          "name": "2",
+          "size": 74
+        },
+        {
+          "name": "3",
+          "size": 96
+        },
+        {
+          "name": "4",
+          "size": 155
+        },
+        {
+          "name": "5",
+          "size": 120
+        },
+        {
+          "name": "6",
+          "size": 158
+        },
+        {
+          "name": "7",
+          "size": 108
+        },
+        {
+          "name": "8",
+          "size": 149
+        },
+        {
+          "name": "9",
+          "size": 79
+        },
+        {
+          "name": "10",
+          "size": 40
+        },
+        {
+          "name": "11",
+          "size": 9
+        }
+      ]
+    },
+    {
+      "name": "Engineer - Electrical",
+      "children": [
+        {
+          "name": "1",
+          "size": 6
+        },
+        {
+          "name": "2",
+          "size": 38
+        },
+        {
+          "name": "3",
+          "size": 56
+        },
+        {
+          "name": "4",
+          "size": 113
+        },
+        {
+          "name": "5",
+          "size": 70
+        },
+        {
+          "name": "6",
+          "size": 100
+        },
+        {
+          "name": "7",
+          "size": 119
+        },
+        {
+          "name": "8",
+          "size": 147
+        },
+        {
+          "name": "9",
+          "size": 113
+        },
+        {
+          "name": "10",
+          "size": 101
+        },
+        {
+          "name": "11",
+          "size": 30
         }
       ]
     }
