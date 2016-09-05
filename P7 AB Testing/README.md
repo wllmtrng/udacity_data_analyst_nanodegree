@@ -52,7 +52,7 @@ Baseline Values:
 Standard Deviation for Evaluation Metric:
 
 |  Metrics | Baseline Values   | SE | SE/5000 |
-|---|--:|--|--|
+|---|--:|---|---|
 | Gross Conversion  | 0.2063  | 0.0072 | 0.0202 |
 | Retention         | 0.5300  | 0.0194 | 0.0549 |
 | Net Conversion    | 0.1093  | 0.0055 | 0.0156 |
