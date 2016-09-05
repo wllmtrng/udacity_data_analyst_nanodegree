@@ -1,0 +1,6 @@
+Link: https://s3.amazonaws.com/metro-extracts.mapzen.com/san-francisco-bay_california.osm.bz2
+
+The map area for the above link is the San Francisco Bay Area. I chose this
+dataset because it contains a multitude of different cities that encompass
+different urban environments. I thought it would be interesting to see what
+differences there are between these different kinds of cities.
