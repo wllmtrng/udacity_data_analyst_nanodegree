@@ -1,0 +1,10 @@
+References:
+www.stackoverflow.com
+www.kaggle.com
+www.r-bloggers.com
+https://sites.google.com/site/bikesharekaggle/
+https://github.com/logicalguess/kaggle-bike-sharing-demand
+https://github.com/apeeyush/machine-learning/tree/master/bike-sharing-demand
+http://blog.minitab.com/blog/understanding-statistics/handling-multicollinearity-in-regression-analysis
+http://blog.minitab.com/blog/adventures-in-statistics/what-are-the-effects-of-multicollinearity-and-when-can-i-ignore-them
+https://www.dropbox.com/s/haaoufo0upovasb/the-impact-of-weather-conditions-on-capital-bikeshare-trips.pdf?dl=0

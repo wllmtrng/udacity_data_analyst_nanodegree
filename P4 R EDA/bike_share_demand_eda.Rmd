@@ -1,0 +1,929 @@
+---
+title: "Exploratory Data Analysis:
+        Capital Bikeshare Program in Washington, D.C."
+author: "William Truong"
+date: "January 19, 2016"
+output:
+  html_document:
+    keep_md: yes
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE)
+library(ggplot2)
+library(plyr)
+library(dplyr)
+library(knitr)
+library(data.table)
+library(gridExtra) # grid.arrange
+library(reshape2) # melt
+library(memisc) # mtable
+library(lubridate) # ymd_hms
+library(scales) # date_breaks
+library(corrplot) # correlation matrix
+library(randomForest)
+```
+
+# Introduction
+Exploratory Data Analysis will be performed on a dataset describing the hourly
+count of rental bikes between the years 2011 and 2012 for the Capital Bikeshare
+Program in Washington, D.C. The dataset contains bike ridership information as
+well as corresponding weather data.
+
+Afterwards with the attributes provided, based on our analysis, we will create
+a preliminary model to predict the number of bikeshare usage for a given hour
+on a specific day.
+
+## Summary of Dataset
+```{r}
+wd = read.csv("./Bike-Sharing-Dataset/hour.csv", stringsAsFactors=FALSE)
+kable(summary(wd[, 1:8]))
+kable(summary(wd[, 9:16]))
+```
+
+## What the Dataset Looks Like
+```{r}
+head(wd, 10)
+```
+
+## Structure
+```{r}
+str(wd)
+```
+
+## Dimensions
+```{r}
+dim(wd)
+```
+
+## Description of Attributes
+From [UCI's Machine Learning Repository][1]:
+
+- *instant*: Record index
+- *dteday*: Dates from 2011-01-01 to 2012-12-31
+- *season*: (1:spring, 2:summer, 3:fall, 4:winter)
+- *yr* : year (0: 2011, 1:2012)
+- *mnth* : month ( 1 to 12)
+- *hr* : hour (0 to 23)
+- *holiday* : whether day is holiday or not
+- *weekday* : day of the week
+- *workingday* : if day is neither weekend nor holiday is 1, otherwise is 0.
+- *weathersit* : 
+    - 1: Clear, Few clouds, Partly cloudy, Partly cloudy
+    - 2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist
+    - 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain +
+         Scattered clouds
+    - 4: Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog
+- *temp* : Normalized temperature in Celsius. The values are derived via
+           (t-t_min)/(t_max-t_min), t_min=-8, t_max=+39 (only in hourly scale)
+- *atemp*: Normalized feeling temperature in Celsius. The values are derived
+           via (t-t_min)/(t_max-t_min), t_min=-16, t_max=+50
+           (only in hourly scale)
+- *hum*: Normalized humidity. The values are divided to 100 (max)
+- *windspeed*: Normalized wind speed. The values are divided to 67 (max)
+- *casual*: count of casual users
+- *registered*: count of registered users
+- *cnt*: count of total rental bikes including both casual and registered
+
+[1]: https://archive.ics.uci.edu/ml/datasets/Bike+Sharing+Dataset
+
+## Convert Attributes into Factors
+For visualization purposes, let's convert the following attributes into factors
+
+- hr
+- weathersit
+- holiday
+- workingday
+- weekday
+- season
+- mnth
+- yr
+
+```{r echo=TRUE}
+setDT(wd)
+# Also convert dteday to the Posix Date format
+wd[, date:=ymd_hms(with(wd, paste(dteday, " ", hr,":00:00", sep="")), 
+                   tz="EST")]
+wd[, dteday:=as.Date(dteday)] 
+wd[, hr.factored:=factor(hr)]
+wd[, weathersit.factored:=factor(weathersit, levels=c(1,2,3,4),
+                       labels=c("Ideal", "Good", "Bad", "Poor"))]
+wd[, holiday.factored:=factor(holiday, labels=c("Regular Day", "Holiday"))]
+wd[, workingday.factored:=factor(workingday, labels=c("Weekend or Holiday",
+                                                      "Working Day"))]
+wd[, weekday.factored:=factor(weekday, levels=c(0,1,2,3,4,5,6),
+                    labels=c("SU","M","T","W","TH","F","S"))]
+wd[, season.factored:=factor(season, levels=c(1,2,3,4),
+                   labels=c("Spring","Summer","Fall","Winter"))]
+wd[, mnth.factored:=factor(mnth)]
+wd[, yr.factored:=factor(yr, levels=c(0,1), labels=c(2011,2012))]
+```
+
+# Quick Look at the Bikeshare Ridership
+```{r}
+ggplot(wd, aes(date, cnt)) +
+  scale_x_datetime(breaks=date_breaks("4 months"),
+                   labels=date_format("%m/%y")) +
+  geom_point(aes(color=yr.factored)) +
+  scale_fill_identity(name="") +
+  geom_smooth(aes(y=cnt, fill="blue")) +
+  ggtitle("Bikeshare Ridership") +
+  xlab("MM/YY") +
+  ylab("Bikeshare Ridership per Hour")
+```
+Plotting bikeshare ridership per hour for the years 2011 - 2012 already show
+some interesting relationships and trends:
+
+- The plot shows an increasing trend year over year.
+- There is a cyclical trend in bikeshare usage, peaking in the summer while
+dipping in the winter.
+- A wide range exists between low usage hours and high usage hours.
+
+# Univariate Analysis
+
+## Bikeshare Usage Attributes
+
+```{r}
+p1 = ggplot(data=wd, aes(cnt)) +
+     geom_histogram(binwidth=15) +
+     scale_x_continuous(limits=c(0,1000))
+p2 = ggplot(data=wd, aes(registered)) +
+     geom_histogram(binwidth=15) +
+     scale_x_continuous(limits=c(0,1000))
+p3 = ggplot(data=wd, aes(casual)) +
+     geom_histogram(binwidth=15) +
+     scale_x_continuous(limits=c(0,1000))
+
+grid.arrange(p1,p2,p3, top="Histogram of Bikeshare Usage")
+```
+Bikeshare usage as a whole follows a Poisson distribution. There are more
+registered users than casual users. Casual users are lower
+in bikeshare usage for a given hour than registered users.
+
+
+## Factored Attributes
+
+### Seasons
+```{r}
+ggplot(data=wd, aes(season.factored)) + geom_bar() +
+  coord_flip() + 
+  ggtitle("Entries According by Season")
+```
+
+According to the dataset description, the following mappings for the seasons
+are: (1:spring, 2:summer, 3:fall, 4:winter). If that was the case, then spring
+and summer should have slightly more entries than fall and winter, which leads
+to the suspicion that seasons are labeled incorrectly. We can check this by
+plotting the previous plot and coloring by season.
+
+```{r}
+ggplot(wd, aes(date, cnt)) +
+  scale_x_datetime(breaks=date_breaks("4 months"),
+                   labels=date_format("%m/%y")) +
+  geom_point(aes(color=season.factored)) +
+  scale_fill_identity(name="") +
+  geom_smooth(aes(y=cnt, fill="blue")) +
+  ggtitle("Bikeshare Ridership") +
+  xlab("MM/YY") +
+  ylab("Bikeshare Ridership per Hour")
+```
+
+Looks like the seasons are off by one. Let's address this and redraw the plots.
+```{r}
+wd[, season.factored := factor(season, levels = c(1, 2, 3, 4),
+                             labels = c("Winter", "Spring", "Summer", "Fall"))]
+ggplot(data=wd, aes(season.factored)) + geom_bar() +
+  coord_flip() + 
+  ggtitle("Entries According by Season")
+
+ggplot(wd, aes(date, cnt)) +
+  scale_x_datetime(breaks=date_breaks("4 months"),
+                   labels=date_format("%m/%y")) +
+  geom_point(aes(color=season.factored)) +
+  scale_fill_identity(name="") +
+  geom_smooth(aes(y=cnt, fill="blue")) +
+  ggtitle("Bikeshare Ridership") +
+  xlab("MM/YY") +
+  ylab("Bikeshare Ridership per Hour")
+```
+Seasons are now correctly labeled.
+
+Since we are looking at the full calendar year of 2011 and 2012, the
+distribution of seasons are almost uniform. Seasons are an indicator of changes
+in temperature pattern, and may prove of use as a feature. However since we 
+have months, the season attribute may not be as useful.
+
+### Weekdays, Weekends, Working Days, and Holidays
+```{r}
+p1 = qplot(data=wd, holiday.factored) +
+  xlab("")
+p2 = qplot(data=wd, workingday.factored) + xlab("")
+
+grid.arrange(p1,p2, ncol=2)
+
+```
+```{r echo=TRUE}
+prop.table(table(wd$workingday.factored))
+```
+
+The first bar plot shows an expected small percentage of holiday entries. As
+for the second bar plot, approximately 32% percent of the days are holidays or
+weekends and 68% working days.
+
+Table of days that are holidays:
+```{r}
+unique(wd[wd$holiday==1, .(dteday)])
+```
+
+
+### Weather Conditions
+
+```{r}
+qplot(wd$weathersit.factored) + xlab("Weather Conditions")
+print("Distribution of Weather Conditions.")
+prop.table(table(wd$weathersit))
+```
+66% of the days are clear (Ideal), 26% partly cloudy (Good), and
+8% rainy/snowy/foggy weather (Bad + Poor). Bad and poor weather conditions may
+exhibit a negative correlation with bikeshare usage.
+
+## Histograms of Weather Reading Attributes
+```{r}
+# All the weather attributes in the dataset have been normalized. To make more
+# sense when plotting, denormalization functions will be used to transform them
+
+denormalize_temp <- function(temp) {
+  min = -8
+  max = 39
+  temp = temp * (max-min) + min
+  # Convert to Farenheit since our audience is American
+  temp = round(temp * 9 / 5 + 32)
+  temp
+}
+
+denormalize_atemp <- function(atemp) {
+  min = -16
+  max = 50
+  atemp = atemp * (max-min) + min
+  # Convert to Farenheit since our audience is American
+  atemp = round(atemp * 9 / 5 + 32)
+  atemp
+}
+
+denormalize_hum <- function(hum) {
+  hum = hum * 100
+  hum
+}
+
+denormalize_wind <- function(wind) {
+  wind = wind * 67
+  wind
+}
+
+wd[, temp.denormed:=denormalize_temp(temp)]
+wd[, atemp.denormed:=denormalize_atemp(atemp)]
+wd[, windspeed.denormed:=denormalize_wind(windspeed)]
+wd[, hum.denormed:=denormalize_hum(hum)]
+
+# Summary for Temperature
+print("Denormalized Temperature Summary, Farenheit")
+summary(wd$temp.denormed)
+
+# Summary for Adjusted Temperature
+print("Denormalized Adjusted Temperature Summary, Farenheit")
+summary(wd$atemp.denormed)
+
+# Summary for Humidity
+print("Denormalized Humidity Summary")
+summary(wd$hum.denormed)
+
+# Summary for Windspeed
+print("Denormalized Windspeed Summary")
+summary(wd$windspeed.denormed)
+
+# Setup 2x2 grid display
+p1 = qplot(data=wd, temp.denormed, binwidth=5) +
+  scale_x_continuous(breaks=seq(0,105,10), limits=c(0,105)) +
+  xlab(expression(paste("Temp,",degree,"F")))
+
+p2 = qplot(data=wd, atemp.denormed, binwidth=5) +
+  scale_x_continuous(breaks=seq(0,105,10), limits=c(0,105)) +
+  xlab(expression(paste("Adjusted Temp, ",degree,"F")))
+
+p3 = qplot(wd$hum.denormed) + xlab("Humidity, %")
+
+p4 = qplot(wd$windspeed.denormed) + xlab("Wind Speed, mph")
+
+grid.arrange(p1,p2,p3,p4)
+```
+
+Note: The weather attributes above have been denormalized to their appropriate
+values.
+
+### Temperature
+The measured temperature in Washington, D.C. exhibits a bimodal distribution,
+indicating that there are 4 seasons.
+
+### Adjusted Temperature
+Compared to the measured temperature, adjusted temperature has more
+spread out measurements. Adjusted temperature readings are a function of
+temperature, humidity, precipitation, and windspeed, and because of this I
+hypothesize that this attribute will have the most correlation with bikeshare
+usage.
+
+### Humidity
+There is great variation in humidity. I assume it will also correlate with
+bikeshare usage.
+
+### Windspeed
+Majority of windspeed temperature lies between 7 mph and 17 mph. This low
+variation suggests that it will not affect bikeshare usage drastically. Outliers
+in windspeed also indicate unfavorable weather conditions, which is what the
+weathersit attribute attempts to capture.
+
+### Summary
+In regards to weather readings, I hypothesize that the adjusted temperature 
+readings will capture most of the correlation with bikeshare usage due to it
+being a function of temperature, humidity, and windspeed. However, with
+temperature, humidity and windspeed present, there might not be a need to
+include adjusted temperature in the model.
+
+## Average and Hourly Weather Conditions over Time
+### Temperature
+```{r}
+p1 = ggplot(wd, aes(x=date, y=temp.denormed)) + 
+  scale_x_datetime(breaks=date_breaks("4 months"),
+                   labels=date_format("%m/%y")) +
+  geom_point(aes(colour=temp.denormed)) +
+  geom_smooth(color = "red",size = 1) +
+  scale_colour_gradient2(name="Temp ºF", low = "blue", mid = "green" ,
+                         high = "red", midpoint = 60) + 
+  scale_y_continuous(breaks=seq(0,125,25), limits=c(0,125)) +
+  ggtitle ("Daily Hourly Temperature") +
+  xlab("Date") +  ylab ("Hourly Temperature ( ºF )")
+
+p2 = ggplot(wd,aes(x=date, y=atemp.denormed)) + 
+  geom_point(aes(colour=atemp.denormed)) +
+  scale_colour_gradient2(name="Temp ºF", low = "blue", mid = "green" ,
+                         high = "red", midpoint = 60) + 
+  geom_smooth(color = "red",size = 1) +
+  scale_y_continuous(breaks=seq(0,125,25)) +
+  ggtitle ("Daily Hourly Feeling Temperature") +
+  xlab("Date") +  ylab ("Hourly Feeling Temperature ( ºF )")
+
+grid.arrange(p1,p2)
+```
+
+Looks like Washington, D.C. experiences the typical four seasons according to
+the temperature plots above. Feeling temperature has much more variability than
+actual temperature. It is quite possible that bikeshare usage may be more
+correlated with feeling temperature.
+
+There also seems to be an anomaly in reading the feeling temperature between
+2012-07 and 2012-10 where one or more temperature readings are much lower than
+the norm. Although it might not make a difference while calculating correlation,
+it's better to remove that observation from our dataset.
+
+Adjusted temperature plot after anomaly has been removed:
+```{r echo=TRUE}
+# Find the date where the anomaly occurs
+unique(wd[wd$dteday > as.Date("2012-07-01") &
+          wd$dteday < as.Date("2012-10-01") &
+          wd$atemp.denormed < 37, .(dteday)])
+
+# Check if atemp is bad for the whole day
+wd[wd$dteday == as.Date("2012-08-17"), .(temp.denormed, atemp.denormed)]
+
+# atemp is bad for the whole day, so replace with temp values
+my_temp <- wd[wd$dteday == as.Date("2012-08-17")]$temp
+my_temp.denormed <- wd[wd$dteday == as.Date("2012-08-17")]$temp.denormed
+                    
+wd[wd$dteday == as.Date("2012-08-17"), atemp := my_temp]
+wd[wd$dteday == as.Date("2012-08-17"), atemp.denormed := my_temp.denormed]
+
+
+ggplot(wd,aes(x=date, y=atemp.denormed)) + 
+  geom_point(aes(colour=atemp.denormed)) +
+  scale_colour_gradient2(name="Temp ºF", low = "blue", mid = "green" ,
+                         high = "red", midpoint = 60) + 
+  geom_smooth(color = "red",size = 1) +
+  scale_y_continuous(breaks=seq(0,125,25)) +
+  ggtitle ("Hourly Feeling Temperature") +
+  xlab("Date") +  ylab ("Hourly Feeling Temperature ( ºF )")
+```
+
+### Humidity
+```{r}
+ggplot(wd, aes(x=date, y=hum.denormed)) + 
+  geom_point(aes(colour=hum.denormed)) +
+  scale_colour_gradient2(name="Humidity, %", low = "#ffeda0", mid = "#feb24c" ,
+                         high = "#f03b20", midpoint = 63) + 
+  geom_smooth(color = "blue",size = 1) +
+  ggtitle ("Hourly Humidity") +
+  xlab("Date") +  ylab ("Hourly Humidity ( % )")
+```
+
+There is huge variation in humidity on a daily basis, with an upward trend in
+humidity starting in the summer and downward trend starting around mid autumn.
+
+### Windspeed
+```{r}
+ggplot(wd, aes(x=date, y=windspeed.denormed)) +
+  scale_x_datetime(breaks=date_breaks("4 months"),
+                   labels=date_format("%m/%y")) +
+  geom_point(aes(colour=windspeed.denormed)) +
+  scale_colour_gradient2(name="Wind Speed, mph", low = "yellow", mid = "red" ,
+                         high = "darkred", midpoint = 30) + 
+  geom_smooth(color = "blue") +
+  ggtitle ("Hourly Windspeed") +
+  xlab("Date") +  ylab ("Hourly Windspeed ( mph )")
+```
+
+Windspeed also varies on a daily basis, with an upward trend in windspeed during
+Winter and Spring and a downward trend in Summer and Fall.
+There are also some days with windspeed greater than 50 mph. 
+
+### Summary
+
+We have analyzed bikeshare usage against temperature, adjusted temperature,
+humidity, and windspeed in great detail for Washington, D.C. over a period of
+two years. It will be interesting later on to see how these attributes affect
+bikeshare usage with a daily average or when attributes such as time of day and
+day of the week are fixed.
+
+# Multivariate Analysis
+
+Here we will analyze what role suspected attributes have with bikeshare usage.
+Since temperature was just discussed in great detail, let's start off with
+looking at hourly bikeshare usage and weather.
+
+##  Bikeshare Usage and Weather
+### Temperature
+```{r}
+p1 <- ggplot(wd, aes(x=temp.denormed, y=cnt)) + 
+  geom_jitter(alpha=.25, size=1, 
+              color="blue", position=position_jitter(width=.5)) +
+  geom_smooth(stat="smooth", color="red") +
+  scale_x_continuous(breaks=seq(10,110,5)) +
+  ggtitle("Hourly Bikeshare Usage According to Temperature") +
+  xlab("Temperature (F)") + ylab("Usage") 
+
+p2 <- ggplot(wd, aes(x=atemp.denormed, y=cnt)) + 
+  geom_jitter(alpha=.25, size=1,
+              color="blue", position=position_jitter(width=.5)) +
+  scale_x_continuous(breaks=seq(10,130,5)) +
+  geom_smooth(stat="smooth", color="red") +
+  ggtitle("Hourly Bikeshare Usage According to Feeling Temperature") +
+  xlab("Feeling Temperature (F)") +
+  ylab("Usage")
+
+grid.arrange(p1,p2,ncol=1)
+```
+It's too hard to tell what's going on with these plots except the observation
+that bike share usage increases as temperature reaches to about 80 degrees
+Farenheit. There is a relatively lesser amount of bikeshare usage when temperatures
+drop below 50 degrees.
+
+A better picture may be formed if we use violin plots with specific temperature
+intervals.
+
+```{r}
+
+wd$temp.denormed.bucket <- cut(wd$temp.denormed,
+                      c(0.0, 30.0, 60.0, 90, 120), right=FALSE)
+
+p1 <- ggplot(wd, aes(x=temp.denormed.bucket, y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage Per Day by Feeling Temperature") +
+  xlab("Temperature (F)") + ylab("Bikeshare Usage")
+  
+wd.cnt_by_temp <- wd %>% group_by(temp.denormed.bucket) %>%
+                                  summarise(count = n()) %>%
+                                  ungroup() %>%
+                                  arrange(temp.denormed.bucket)
+
+
+
+wd$atemp.denormed.bucket <- cut(wd$atemp.denormed,
+                      c(0.0, 30.0, 60.0, 90, 120), right=FALSE)
+
+wd$atemp.denormed.bucket[is.na(wd$atemp.denormed.bucket)] = "[90,120)"
+
+p2 <- ggplot(wd, aes(x=atemp.denormed.bucket, y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage Per Day by Feeling Temperature") +
+  xlab("Feeling Temperature (F)") + ylab("Bikeshare Usage")
+  
+wd.cnt_by_atemp <- wd %>% group_by(atemp.denormed.bucket) %>%
+                                  summarise(count = n()) %>%
+                                  ungroup() %>%
+                                  arrange(atemp.denormed.bucket)
+
+grid.arrange(p1,p2,ncol=1)
+
+kable(wd.cnt_by_temp)
+kable(wd.cnt_by_atemp)
+```
+
+We can see with the tables that feeling temperature is more weighted towards 
+really cold and really hot temperatures. Distributions between the two 
+temperature attributes seem similar. For both plots, at the coldest 
+temperatures there is a lower amount of bikeshare usage, and there is 
+suprisingly a higher amount of bikeshare usage. This may coincide with the
+fact that colder temperature are associated with winter, when people are on
+holiday break, and also with the early AM hours, where hotter temperature 
+coincides with the summer break when kids are out of school. Further analysis 
+may need to be done with hours fixed to eliminate confounding variables.
+
+On a macro level, let's see what happens when we plot daily bikeshare usage 
+against time and color by mean temperature.
+
+```{r}
+# Calculate the averages for temp, atemp, humidity, and windspeed for future
+# reference.
+wd.daily <- wd %>% 
+            group_by(dteday) %>%
+            summarise(daily_cnt=sum(cnt),
+                      avg_temp=mean(temp.denormed),
+                      avg_atemp=mean(atemp.denormed),
+                      avg_hum=mean(hum.denormed),
+                      avg_windspeed=mean(windspeed.denormed))
+
+ggplot(wd.daily, aes(x=dteday)) + 
+      geom_point(aes(y=daily_cnt, color=avg_temp)) +
+      scale_colour_gradient2(name="Temp ºF", low = "blue", mid = "green" ,
+                             high = "red", midpoint = 60)
+```
+
+With the presented plot, we can see that temperature is highly correlated with
+the daily number of bikeshare usage. Bikeshare increases with warmer
+temperatures and then slightly decreases when temperatures exceed 80 degrees
+Farenheit, which also indicates a nonlinear relationship.
+
+### Humidity
+
+For humidity we need to plot it independent from temperature changes and time.
+```{r}
+# Group bikeshare usage by humidity values.
+wd.avg_cnt_by_hum <- wd %>% group_by(hum.denormed) %>%
+                            summarise(count = n(),
+                                      avg_cnt = mean(cnt),
+                                      avg_casual = mean(casual),
+                                      avg_registered = mean(registered)) %>%
+                            ungroup() %>%
+                            arrange(hum.denormed)
+ggplot(wd.avg_cnt_by_hum, aes(x=hum.denormed,y=avg_cnt)) + 
+  geom_bar(stat="identity") +
+  ggtitle("Mean Bikeshare Usage Per Day by Humidity")
+```
+
+Bikeshare usage decreases as humidity increases.
+
+### Windspeed
+
+For windspeed the values for which wind is measured are stored in floats. To 
+get a more accurate picture, windspeed measurements will be put in groups of
+10 mph when plotted.
+```{r}
+wd$wind.denormed.bucket <- cut(wd$windspeed.denormed,
+                      c(0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0), right=FALSE)
+
+ggplot(wd, aes(x=wind.denormed.bucket, y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage Per Day by Windspeed (mph)") +
+  xlab("Windspeed (mph)") + ylab("Bikeshare Usage")
+  
+wd.cnt_by_wind <- wd %>% group_by(wind.denormed.bucket) %>%
+                                  summarise(count = n()) %>%
+                                  ungroup() %>%
+                                  arrange(wind.denormed.bucket)
+
+kable(wd.cnt_by_wind)
+```
+
+As windspeeds exceed 30 mph, there is a downward trend in bikeshare usage.
+However, the number of occurences where windspeed exceed 40 mph might be too
+few to make any statements about trend. 
+
+### Weather Conditions
+```{r}
+ggplot(wd, aes(weathersit.factored, y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage according to Weather Conditions") +
+  xlab("Conditions") + ylab("Usage") 
+
+wd.cnt_by_weather <- wd %>% group_by(weathersit.factored) %>%
+                                  summarise(count = n()) %>%
+                                  ungroup()
+kable(wd.cnt_by_weather)
+```
+
+There are identical distributions for ideal and good weather conditions. When
+weather conditions are bad, the distribution compresses into bikeshare usage
+under 250. There are too few poor weather conditions to be any significant,
+but we can assume it would be similar to bad weather conditions.
+
+### Season
+```{r}
+ggplot(wd, aes(season.factored, y=cnt)) + geom_violin() + 
+  ggtitle("Bikeshare Usage according to Season") +
+  xlab("Season") + ylab("Usage")
+```
+
+Distributions are identical for the seasons except Winter. In Winter decreased
+bikeshare usage may be the result of the holidays and colder temperatures.
+
+## Time Attributes
+```{r}
+ggplot(wd, aes(yr.factored, y=cnt)) + geom_violin() + 
+  ggtitle("Bikeshare Usage according to Year") +
+  xlab("Year") + ylab("Usage")
+```
+The shape of the distribution for 2012 changed drastically due to growth in the
+system, indicating that there is growth due to demand and popularity 
+independent of weather conditions.
+
+```{r}
+ggplot(wd, aes(x=mnth.factored, y=cnt)) + 
+  geom_violin(aes(color=season.factored)) +
+  ggtitle("Bikeshare Usage according to Month") +
+  xlab("Month") + ylab("Usage")
+```
+Months give a finer resolution of how seasons affect bikeshare usage.
+
+```{r}
+ggplot(wd, aes(hr.factored, y=cnt)) + geom_boxplot() +
+  ggtitle("Bikeshare Usage according to Hour") +
+  xlab("Hour") + ylab("Usage")
+```
+
+By taking a look at the variance in ridership for each of the hours we can see
+that there are definitely factors that contribute to ridership for each hour.
+There are two peak times, 8am and 5pm. The users using the bikeshare program at
+this time are probably people working in the city.
+
+```{r}
+ggplot(wd, aes(x=hr.factored, y=cnt)) +
+  geom_boxplot() +
+  facet_wrap(~workingday.factored) + 
+  ylab("Bikeshare Usage") + xlab("Hour of Day") +
+  ggtitle("Bikeshare Usage According to Hour of Day, Seperated by Type of Day")
+```
+
+By faceting between whether it's a working day or not, we have identified that
+different peak times exist.
+
+```{r}
+ggplot(wd, aes(weekday.factored, y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage according to Day") + xlab("Day") + ylab("Usage")
+```
+
+Bikeshare usage for the days of the week can be seperated by weekends and
+weekdays, which reaffirms the use of the workingday attribute.
+
+## Conditional Attributes:
+
+```{r}
+p1 = ggplot(wd, aes(holiday.factored, y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage According to Type of Day") +
+  xlab("Type of Day") + ylab("Usage")
+
+p2 =ggplot(wd,
+           aes(factor(workingday, 
+                      labels=c("Holiday Or Weekend", "Working Day")), y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage According to Type of Day") +
+  xlab("Type of Day") + ylab("Usage")
+
+grid.arrange(p1,p2, ncol=2)
+```
+
+In the dataset there are two variables: holiday and workingday. Holiday
+indicates whether the day is a holiday or not. Workingday indicates whether it
+is a working day or not. As we can see in the plots above, there is a decrease
+in bikeshare usage if it is a holiday. There is also a decrease in bikeshare
+ridership if it is not a working day.
+
+To get a better look at how the weekend by itself effects bikeshare usage,
+let's combine the two attributes into an attribute called type_of_day with the
+following mappings:
+
+* 0: Holiday
+* 1: Weekend
+* 2: Working day
+
+```{r}
+wd[, type_of_day:=ifelse(workingday == 1, 2, ifelse(holiday == 0, 1, 0))]
+
+wd[, type_of_day.factored := factor(type_of_day, labels=c("Holiday",
+                                                         "Weekend",
+                                                         "Working Day"))]
+
+ggplot(wd, aes(type_of_day.factored, y=cnt)) +
+  geom_violin() + 
+  ggtitle("Bikeshare Usage According to Type of Day") + xlab("Type of Day") +
+  ylab("Usage")
+```
+
+Holidays show slightly less bikeshare usage than weekends, but it may not
+be enough to be significant. There seems to be more bikeshare usage on
+working days.
+
+# Wrapping It All Up Analytically
+
+Random forest will be used to find the relationship between bikeshare usage and
+the given attributes, due to the observed sinusoidal relationships seen in the
+analysis.
+
+The year, month, hour, type of day (holiday, weekend, or working day),
+temperature, humidity, and windspeed will be used as features.
+
+Only one temperature attribute will be used because the two temperature
+attributes are highly correlated with each other. More rigorous feature
+selection can be done later on to determine what is better suited.
+
+## Random Forest Feature Importance
+```{r}
+set.seed(1)
+features <- wd[,.(yr, mnth, hr, type_of_day, weathersit,
+                  weekday, temp, hum, windspeed)]
+
+rf <- randomForest(features, wd$cnt, ntree=100, importance=TRUE)
+
+# Create feature importance plot
+feature_importance <- function(model)
+{
+  imp <- importance(model, type=1)
+  featureImportance <- data.frame(Feature=row.names(imp), Importance=imp[,1])
+  
+  ggplot(featureImportance, aes(x=reorder(Feature, Importance),
+                                y=Importance)) +
+        geom_bar(stat="identity", fill="#53cfff") +
+        coord_flip() + 
+        theme_light(base_size=16) +
+        xlab("") + 
+        ggtitle("Feature Importance") +
+        theme(plot.title = element_text(size=18),
+              strip.text.x = element_blank(),
+              axis.text.x  = element_blank(),
+              axis.ticks.x = element_blank())
+}
+
+feature_importance(rf)
+```
+
+What stands out here is that the year attribute is very important by random
+forest. This validates the previous observation that bikeshare usage is
+growing in the number of registered and casual users year over year.
+Let's see if that changes the importance of the relationship between
+attributes and bikeshare usage.
+
+```{r}
+feature_range <- function(features, model)
+{
+  partials <- data.frame()
+  imp <- importance(model)
+  impvar <- rownames(imp)[order(imp[, 1], decreasing=TRUE)]
+  for (i in impvar) {
+    # see ?"<<-" and 
+    # http://bit.ly/1Lly6JP
+    i <<- i # kicks variable to global
+    # need to wrap i in c() to check, only works for interactive:
+    # http://bit.ly/1pikcxP
+    partial <- partialPlot(x = model,
+                           pred.data = features, x.var = c(i),
+                           plot=FALSE)
+    xt <- rescale(partial$x)
+    partials <- rbind(partials, data.frame(x=partial$x,
+                                           xt=xt, y=partial$y,
+                                           feature=i))
+  }
+  ranges <- ddply(partials, "feature", function(d) {
+    r <- range(d$y)
+    data.frame(feature=d$feature[1], range=r[2]-r[1])
+  })
+  features_to_plot <- ranges[ranges$range>0.05*max(ranges$range), "feature"]
+  x = ggplot(partials[partials$feature %in% features_to_plot,],
+             aes(x=xt, y=y, color=feature)) +
+      geom_line(size=2) +
+      theme_light(base_size=16)
+}
+
+# 2011 data
+f.2011 <- wd[yr == 0, .(mnth, hr, type_of_day, weathersit,
+                   weekday, temp, hum, windspeed)]
+o.2011 <- wd[yr == 0]$cnt
+rf.2011 <- randomForest(f.2011, o.2011, ntree=100, importance=TRUE)
+
+# Create Feature Importance Plot
+p1.2011 <- feature_importance(rf.2011) +
+  ggtitle("2011 Feature Importance")
+
+p2.2011 <- feature_range(f.2011, rf.2011) +
+  xlab("From Min Value to Max Value of Feature") +
+  ylab("2011 Hourly Bikeshare Usage")
+
+# 2012 data
+f.2012 <- wd[yr == 1, .(mnth, hr, type_of_day, weathersit,
+                    weekday, temp, hum, windspeed)]
+o.2012 <- wd[yr == 1]$cnt
+rf.2012 <- randomForest(f.2012, o.2012, ntree=100, importance=TRUE)
+
+# Create Feature Importance Plot
+p1.2012 <- feature_importance(rf.2012) +
+  ggtitle("2012 Feature Importance")
+
+# Create Feature Range Plot
+p2.2012 <- feature_range(f.2012,rf.2012) + 
+  xlab("From Min Value to Max Value of Feature") +
+  ylab("2012 Hourly Bikeshare Usage")
+
+grid.arrange(p1.2011, p1.2012)
+grid.arrange(p2.2011, p2.2012)
+
+
+```
+
+We can see that for both years, hour and temperature play a big role in
+bikeshare usage. In 2012, temperature seems to play more of a role in bikeshare
+useage. The importance of type of day is also stronger in 2012. This may
+suggest a change in trends due to the increased bikeshare usage in 2012.
+
+# Final Plots and Summary
+```{r}
+ggplot(wd, aes(hr.factored, y=cnt)) + geom_boxplot() +
+  ggtitle("Bikeshare Usage according to Hour") +
+  xlab("Hour") + ylab("Usage")
+```
+
+Bikeshare usage is most affected by the hour of the day. There are more people
+using the bikeshare program during rush hour on the weekdays and around the
+afternoon on the weekends.
+
+```{r}
+ggplot(wd, aes(yr.factored, y=cnt)) + geom_violin(fill='#A4A4A4',
+                                                  color="darkred") + 
+  ggtitle("Bikeshare Usage according to Year") +
+  xlab("Year") + ylab("Hourly Bikeshare Usage Counts") + 
+  geom_boxplot(width=0.1)
+```
+
+The year over year system growth in bikeshare usage going from 2011 to 2012
+increased significantly. What is also interesting is that the distribution
+for the years 2011 and 2012 are very different, with 2012 seeing more users on
+average as well as higher outlier numbers.
+
+```{r}
+ggplot(wd.daily, aes(x=dteday)) + 
+      geom_point(aes(y=daily_cnt, color=avg_temp)) +
+      scale_colour_gradient2(name="Temp ºF", low = "blue", mid = "green" ,
+                             high = "red", midpoint = 60) +
+      ggtitle("Daily Bikeshare Usage") +
+      xlab("Date") +
+      ylab("Daily Count") + geom_smooth(aes(y=daily_cnt), stat="smooth",
+                                        color="gold", size=0.5)
+      
+```
+
+Temperature is also one of the major factors influencing bikeshare usage. There
+is a lower number of bikeshare usage when around freezing temperatures,
+suggesting that it may be too cold and a bit dangerous using the bike during
+those circumstances. Hot weather doesn't seem to affect bikeshare usage, but
+it definitely does not encourage an increase in usage, relative to warm
+temperatures.
+
+Overall, it seems that the Capital Bikeshare program is increasing in usage,
+and that it is being used by the community for both commuting and for leisure.
+Something to keep an eye out for would be the increasing growth rate, which
+would mean that more bikes will be needed to bought to keep up. It would be
+interesting to see how bikeshare programs in other cities with different
+climates compare with Capital Bikeshare program's success.
+
+# Reflection
+I chose to investigate the Capital Bikeshare program to solidify my
+understanding of analyzing attributes for the purpose of linear regression
+analysis. What I didn't expect at the beginning was the cyclical patterns that
+exist in multiple attributes. I started off with using linear models in the
+beginning to find relationships, but I quickly learned that it was not the
+model of choice for a feature set that has cyclical patterns. Through some 
+research and due diligence I discovered that random forest was a quick way
+to find correlations between bikeshare usage and the given attributes.
+Another time consuming lesson that I learned was that it is important to
+narrow what you want to explore to make it possible to finish this project.
+
+## Further Exploration
+
+* Investigate what the cause is for the outliers in bikeshare usage. Could it 
+  be a huge event, parade, or concert. Is it due to peak tourist season?
+* Use other types of supervised learning to get the most out of the attributes
+  given.
+* Find out what the different relationships are between bikeshare usage and the
+  given features, when seperated by year.
+* Find out how casual users affect the behavior of registered users, since
+  casual users over time convert to registered users.
+* Eliminate attributes that aren't important in determining bikeshare usage to
+  see if better relationships can be shown through Random Forest.
+
+
