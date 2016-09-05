@@ -154,7 +154,7 @@ wd[, yr.factored:=factor(yr, levels=c(0,1), labels=c(2011,2012))]
 ```
 
 # Quick Look at the Bikeshare Ridership
-![](figs/unnamed-chunk-6-1.png)<!-- -->
+![](figs/unnamed-chunk-6-1.png)
 Plotting bikeshare ridership per hour for the years 2011 - 2012 already show
 some interesting relationships and trends:
 
@@ -167,7 +167,7 @@ dipping in the winter.
 
 ## Bikeshare Usage Attributes
 
-![](figs/unnamed-chunk-7-1.png)<!-- -->
+![](figs/unnamed-chunk-7-1.png)
 Bikeshare usage as a whole follows a Poisson distribution. There are more
 registered users than casual users. Casual users are lower
 in bikeshare usage for a given hour than registered users.
@@ -176,7 +176,7 @@ in bikeshare usage for a given hour than registered users.
 ## Factored Attributes
 
 ### Seasons
-![](figs/unnamed-chunk-8-1.png)<!-- -->
+![](figs/unnamed-chunk-8-1.png)
 
 According to the dataset description, the following mappings for the seasons
 are: (1:spring, 2:summer, 3:fall, 4:winter). If that was the case, then spring
@@ -184,10 +184,10 @@ and summer should have slightly more entries than fall and winter, which leads
 to the suspicion that seasons are labeled incorrectly. We can check this by
 plotting the previous plot and coloring by season.
 
-![](figs/unnamed-chunk-9-1.png)<!-- -->
+![](figs/unnamed-chunk-9-1.png)
 
 Looks like the seasons are off by one. Let's address this and redraw the plots.
-![](figs/unnamed-chunk-10-1.png)<!-- -->![](figs/unnamed-chunk-10-2.png)<!-- -->
+![](figs/unnamed-chunk-10-1.png)![](figs/unnamed-chunk-10-2.png)
 Seasons are now correctly labeled.
 
 Since we are looking at the full calendar year of 2011 and 2012, the
@@ -196,7 +196,7 @@ in temperature pattern, and may prove of use as a feature. However since we
 have months, the season attribute may not be as useful.
 
 ### Weekdays, Weekends, Working Days, and Holidays
-![](figs/unnamed-chunk-11-1.png)<!-- -->
+![](figs/unnamed-chunk-11-1.png)
 
 ```r
 prop.table(table(wd$workingday.factored))
@@ -243,7 +243,7 @@ Table of days that are holidays:
 
 ### Weather Conditions
 
-![](figs/unnamed-chunk-14-1.png)<!-- -->
+![](figs/unnamed-chunk-14-1.png)
 
 ```
 ## [1] "Distribution of Weather Conditions."
@@ -296,7 +296,7 @@ exhibit a negative correlation with bikeshare usage.
 ##   0.000   7.002  13.000  12.740  17.000  57.000
 ```
 
-![](figs/unnamed-chunk-15-1.png)<!-- -->
+![](figs/unnamed-chunk-15-1.png)
 
 Note: The weather attributes above have been denormalized to their appropriate
 values.
@@ -331,7 +331,7 @@ include adjusted temperature in the model.
 
 ## Average and Hourly Weather Conditions over Time
 ### Temperature
-![](figs/unnamed-chunk-16-1.png)<!-- -->
+![](figs/unnamed-chunk-16-1.png)
 
 Looks like Washington, D.C. experiences the typical four seasons according to
 the temperature plots above. Feeling temperature has much more variability than
@@ -410,16 +410,16 @@ ggplot(wd,aes(x=date, y=atemp.denormed)) +
   xlab("Date") +  ylab ("Hourly Feeling Temperature ( ºF )")
 ```
 
-![](figs/unnamed-chunk-17-1.png)<!-- -->
+![](figs/unnamed-chunk-17-1.png)
 
 ### Humidity
-![](figs/unnamed-chunk-18-1.png)<!-- -->
+![](figs/unnamed-chunk-18-1.png)
 
 There is huge variation in humidity on a daily basis, with an upward trend in
 humidity starting in the summer and downward trend starting around mid autumn.
 
 ### Windspeed
-![](figs/unnamed-chunk-19-1.png)<!-- -->
+![](figs/unnamed-chunk-19-1.png)
 
 Windspeed also varies on a daily basis, with an upward trend in windspeed during
 Winter and Spring and a downward trend in Summer and Fall.
@@ -441,7 +441,7 @@ looking at hourly bikeshare usage and weather.
 
 ##  Bikeshare Usage and Weather
 ### Temperature
-![](figs/unnamed-chunk-20-1.png)<!-- -->
+![](figs/unnamed-chunk-20-1.png)
 It's too hard to tell what's going on with these plots except the observation
 that bike share usage increases as temperature reaches to about 80 degrees
 Farenheit. There is a relatively lesser amount of bikeshare usage when temperatures
@@ -450,7 +450,7 @@ drop below 50 degrees.
 A better picture may be formed if we use violin plots with specific temperature
 intervals.
 
-![](figs/unnamed-chunk-21-1.png)<!-- -->
+![](figs/unnamed-chunk-21-1.png)
 
 temp.denormed.bucket    count
 ---------------------  ------
@@ -481,7 +481,7 @@ may need to be done with hours fixed to eliminate confounding variables.
 On a macro level, let's see what happens when we plot daily bikeshare usage 
 against time and color by mean temperature.
 
-![](figs/unnamed-chunk-22-1.png)<!-- -->
+![](figs/unnamed-chunk-22-1.png)
 
 With the presented plot, we can see that temperature is highly correlated with
 the daily number of bikeshare usage. Bikeshare increases with warmer
@@ -491,7 +491,7 @@ Farenheit, which also indicates a nonlinear relationship.
 ### Humidity
 
 For humidity we need to plot it independent from temperature changes and time.
-![](figs/unnamed-chunk-23-1.png)<!-- -->
+![](figs/unnamed-chunk-23-1.png)
 
 Bikeshare usage decreases as humidity increases.
 
@@ -500,7 +500,7 @@ Bikeshare usage decreases as humidity increases.
 For windspeed the values for which wind is measured are stored in floats. To 
 get a more accurate picture, windspeed measurements will be put in groups of
 10 mph when plotted.
-![](figs/unnamed-chunk-24-1.png)<!-- -->
+![](figs/unnamed-chunk-24-1.png)
 
 wind.denormed.bucket    count
 ---------------------  ------
@@ -516,7 +516,7 @@ However, the number of occurences where windspeed exceed 40 mph might be too
 few to make any statements about trend. 
 
 ### Weather Conditions
-![](figs/unnamed-chunk-25-1.png)<!-- -->
+![](figs/unnamed-chunk-25-1.png)
 
 weathersit.factored    count
 --------------------  ------
@@ -531,40 +531,40 @@ under 250. There are too few poor weather conditions to be any significant,
 but we can assume it would be similar to bad weather conditions.
 
 ### Season
-![](figs/unnamed-chunk-26-1.png)<!-- -->
+![](figs/unnamed-chunk-26-1.png)
 
 Distributions are identical for the seasons except Winter. In Winter decreased
 bikeshare usage may be the result of the holidays and colder temperatures.
 
 ## Time Attributes
-![](figs/unnamed-chunk-27-1.png)<!-- -->
+![](figs/unnamed-chunk-27-1.png)
 The shape of the distribution for 2012 changed drastically due to growth in the
 system, indicating that there is growth due to demand and popularity 
 independent of weather conditions.
 
-![](figs/unnamed-chunk-28-1.png)<!-- -->
+![](figs/unnamed-chunk-28-1.png)
 Months give a finer resolution of how seasons affect bikeshare usage.
 
-![](figs/unnamed-chunk-29-1.png)<!-- -->
+![](figs/unnamed-chunk-29-1.png)
 
 By taking a look at the variance in ridership for each of the hours we can see
 that there are definitely factors that contribute to ridership for each hour.
 There are two peak times, 8am and 5pm. The users using the bikeshare program at
 this time are probably people working in the city.
 
-![](figs/unnamed-chunk-30-1.png)<!-- -->
+![](figs/unnamed-chunk-30-1.png)
 
 By faceting between whether it's a working day or not, we have identified that
 different peak times exist.
 
-![](figs/unnamed-chunk-31-1.png)<!-- -->
+![](figs/unnamed-chunk-31-1.png)
 
 Bikeshare usage for the days of the week can be seperated by weekends and
 weekdays, which reaffirms the use of the workingday attribute.
 
 ## Conditional Attributes:
 
-![](figs/unnamed-chunk-32-1.png)<!-- -->
+![](figs/unnamed-chunk-32-1.png)
 
 In the dataset there are two variables: holiday and workingday. Holiday
 indicates whether the day is a holiday or not. Workingday indicates whether it
@@ -580,7 +580,7 @@ following mappings:
 * 1: Weekend
 * 2: Working day
 
-![](figs/unnamed-chunk-33-1.png)<!-- -->
+![](figs/unnamed-chunk-33-1.png)
 
 Holidays show slightly less bikeshare usage than weekends, but it may not
 be enough to be significant. There seems to be more bikeshare usage on
@@ -600,7 +600,7 @@ attributes are highly correlated with each other. More rigorous feature
 selection can be done later on to determine what is better suited.
 
 ## Random Forest Feature Importance
-![](figs/unnamed-chunk-34-1.png)<!-- -->
+![](figs/unnamed-chunk-34-1.png)
 
 What stands out here is that the year attribute is very important by random
 forest. This validates the previous observation that bikeshare usage is
@@ -608,7 +608,7 @@ growing in the number of registered and casual users year over year.
 Let's see if that changes the importance of the relationship between
 attributes and bikeshare usage.
 
-![](figs/unnamed-chunk-35-1.png)<!-- -->![](figs/unnamed-chunk-35-2.png)<!-- -->
+![](figs/unnamed-chunk-35-1.png)![](figs/unnamed-chunk-35-2.png)
 
 We can see that for both years, hour and temperature play a big role in
 bikeshare usage. In 2012, temperature seems to play more of a role in bikeshare
@@ -616,20 +616,20 @@ useage. The importance of type of day is also stronger in 2012. This may
 suggest a change in trends due to the increased bikeshare usage in 2012.
 
 # Final Plots and Summary
-![](figs/unnamed-chunk-36-1.png)<!-- -->
+![](figs/unnamed-chunk-36-1.png)
 
 Bikeshare usage is most affected by the hour of the day. There are more people
 using the bikeshare program during rush hour on the weekdays and around the
 afternoon on the weekends.
 
-![](figs/unnamed-chunk-37-1.png)<!-- -->
+![](figs/unnamed-chunk-37-1.png)
 
 The year over year system growth in bikeshare usage going from 2011 to 2012
 increased significantly. What is also interesting is that the distribution
 for the years 2011 and 2012 are very different, with 2012 seeing more users on
 average as well as higher outlier numbers.
 
-![](figs/unnamed-chunk-38-1.png)<!-- -->
+![](figs/unnamed-chunk-38-1.png)
 
 Temperature is also one of the major factors influencing bikeshare usage. There
 is a lower number of bikeshare usage when around freezing temperatures,
